@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="config.js"></script>
 <style>
 :root{
   --ink:#0e0f0c;--paper:#fafafa;--paper-soft:#f1f0ec;
@@ -312,76 +313,7 @@ button{font-family:inherit}
       <!-- Settings view -->
       <!-- Integrations view -->
       <div class="view" id="view-integrations">
-        <div class="int-page">
-
-          <!-- Telegram card -->
-          <div class="int-big-card" id="intcard-tg">
-            <div class="int-big-head">
-              <div class="int-icon int-icon-tg">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.19-2.02 9.53c-.15.67-.54.84-1.09.52l-3-2.21-1.45 1.4c-.16.16-.3.3-.6.3l.21-3.03 5.5-4.97c.24-.21-.05-.33-.37-.12L7.08 14.4l-2.95-.92c-.64-.2-.65-.64.13-.95l11.54-4.45c.53-.19 1 .13.14.11z"/></svg>
-              </div>
-              <div style="flex:1">
-                <div class="int-big-name">Telegram</div>
-                <div class="int-big-desc" id="int-tg-desc">Пост в канал при публикации статьи</div>
-              </div>
-              <span class="int-badge" id="int-tg-badge">Не настроено</span>
-              <button class="btn-secondary" id="int-tg-toggle" onclick="toggleIntSetup('tg')" style="margin-left:12px">Настроить</button>
-            </div>
-            <div class="int-setup" id="int-setup-tg">
-              <div class="int-setup-inner">
-                <div class="set-row">
-                  <label class="set-lbl">Bot Token<a class="int-help" href="https://t.me/BotFather" target="_blank">→ @BotFather</a></label>
-                  <input class="set-inp" id="int-tg-token" type="password" placeholder="123456789:ABC-DEF...">
-                </div>
-                <div class="set-row" style="margin-bottom:0">
-                  <label class="set-lbl">Канал (@username или числовой ID)</label>
-                  <input class="set-inp" id="int-tg-channel" placeholder="@montas_news">
-                </div>
-                <div class="int-setup-footer">
-                  <button class="btn-secondary" id="int-tg-test" onclick="testTelegram()">Отправить тест</button>
-                  <label class="toggle" title="Включить">
-                    <input type="checkbox" id="int-tg-enabled" onchange="saveIntegrations()">
-                    <span class="toggle-track"></span>
-                  </label>
-                  <span style="font-size:12px;color:var(--muted)">Активна</span>
-                  <button class="btn-primary" onclick="saveIntegrations()" style="margin-left:auto">Сохранить</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Medium card -->
-          <div class="int-big-card" id="intcard-md">
-            <div class="int-big-head">
-              <div class="int-icon int-icon-md">M</div>
-              <div style="flex:1">
-                <div class="int-big-name">Medium</div>
-                <div class="int-big-desc" id="int-md-desc">Публикация через n8n / Make.com webhook</div>
-              </div>
-              <span class="int-badge" id="int-md-badge">Не настроено</span>
-              <button class="btn-secondary" id="int-md-toggle" onclick="toggleIntSetup('md')" style="margin-left:12px">Настроить</button>
-            </div>
-            <div class="int-setup" id="int-setup-md">
-              <div class="int-setup-inner">
-                <div class="set-row" style="margin-bottom:8px">
-                  <label class="set-lbl">Webhook URL (n8n или Make.com)</label>
-                  <input class="set-inp" id="int-md-webhook" type="url" placeholder="https://n8n.example.com/webhook/...">
-                </div>
-                <div class="set-note" style="margin-bottom:12px">Создайте workflow в <a href="https://n8n.io" target="_blank" style="color:var(--accent)">n8n.io</a>: Webhook → Medium API с вашим Integration Token. Вставьте URL вебхука выше.</div>
-                <div class="int-setup-footer">
-                  <button class="btn-secondary" id="int-md-test" onclick="testMedium()">Отправить тест</button>
-                  <label class="toggle" title="Включить">
-                    <input type="checkbox" id="int-md-enabled" onchange="saveIntegrations()">
-                    <span class="toggle-track"></span>
-                  </label>
-                  <span style="font-size:12px;color:var(--muted)">Активна</span>
-                  <button class="btn-primary" onclick="saveIntegrations()" style="margin-left:auto">Сохранить</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
+        <div class="int-page" id="int-page"></div>
       </div>
 
       <div class="view" id="view-settings">
@@ -636,7 +568,7 @@ function initApp(){
   renderStats();
   renderList();
   showView('articles');
-  initIntegrations();
+  updateIntSbDot();
   // strip inline font/background on paste
   document.getElementById('e-content').addEventListener('paste',e=>{
     e.preventDefault();
@@ -686,7 +618,7 @@ function showView(name){
     document.getElementById('view-settings').classList.add('active');
   } else if(name==='integrations'){
     document.getElementById('view-integrations').classList.add('active');
-    refreshIntBadges();
+    renderIntPage();
   }
 
   // sidebar highlight
@@ -1035,113 +967,53 @@ function toast(msg){
 }
 
 // ── INTEGRATIONS ──
-const INT_KEY='montas_integrations';
-function loadIntegrations(){try{return JSON.parse(localStorage.getItem(INT_KEY)||'{}')}catch{return {}}}
-function saveIntegrationsToStorage(d){localStorage.setItem(INT_KEY,JSON.stringify(d))}
+function loadIntegrations(){return window.MONTAS_CONFIG||{}}
 
 function initIntegrations(){
-  const cfg=loadIntegrations();
-  if(cfg.telegram){
-    document.getElementById('int-tg-enabled').checked=!!cfg.telegram.enabled;
-    document.getElementById('int-tg-token').value=cfg.telegram.token||'';
-    document.getElementById('int-tg-channel').value=cfg.telegram.channel||'';
-  }
-  if(cfg.medium){
-    document.getElementById('int-md-enabled').checked=!!cfg.medium.enabled;
-    document.getElementById('int-md-webhook').value=cfg.medium.webhook||'';
-  }
-  refreshIntBadges();
+  renderIntPage();
+  updateIntSbDot();
 }
 
-function refreshIntBadges(){
+function renderIntPage(){
   const cfg=loadIntegrations();
   const tg=cfg.telegram;
   const md=cfg.medium;
-  const tgOk=tg?.token&&tg?.channel;
-  const mdOk=md?.webhook;
-  const tgBadge=document.getElementById('int-tg-badge');
-  const mdBadge=document.getElementById('int-md-badge');
-  const tgBtn=document.getElementById('int-tg-toggle');
-  const mdBtn=document.getElementById('int-md-toggle');
-  if(tgBadge){
-    tgBadge.textContent=tgOk?(tg.enabled?'Активна':'Подключено'):'Не настроено';
-    tgBadge.className='int-badge'+(tgOk&&tg.enabled?' active':tgOk?' connected':'');
-    if(tgBtn) tgBtn.textContent=tgOk?'Изменить':'Настроить';
-    if(tg?.channel) document.getElementById('int-tg-desc').textContent='Канал: '+tg.channel;
-  }
-  if(mdBadge){
-    mdBadge.textContent=mdOk?(md.enabled?'Активна':'Подключено'):'Не настроено';
-    mdBadge.className='int-badge'+(mdOk&&md.enabled?' active':mdOk?' connected':'');
-    if(mdBtn) mdBtn.textContent=mdOk?'Изменить':'Настроить';
-  }
-  // sidebar green dot
-  const sbDot=document.getElementById('int-sb-badge');
-  if(sbDot){const hasActive=(tgOk&&tg?.enabled)||(mdOk&&md?.enabled);sbDot.style.display=hasActive?'':'none';}
-}
-
-function toggleIntSetup(id){
-  const el=document.getElementById('int-setup-'+id);
-  el.classList.toggle('open');
-}
-
-function setIntStatus(id,state){
-  refreshIntBadges();
-}
-
-function saveIntegrations(){
-  const data={
-    telegram:{
-      enabled:document.getElementById('int-tg-enabled').checked,
-      token:document.getElementById('int-tg-token').value.trim(),
-      channel:document.getElementById('int-tg-channel').value.trim(),
+  const PLATFORMS=[
+    {
+      icon:`<svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.19-2.02 9.53c-.15.67-.54.84-1.09.52l-3-2.21-1.45 1.4c-.16.16-.3.3-.6.3l.21-3.03 5.5-4.97c.24-.21-.05-.33-.37-.12L7.08 14.4l-2.95-.92c-.64-.2-.65-.64.13-.95l11.54-4.45c.53-.19 1 .13.14.11z"/></svg>`,
+      iconClass:'int-icon-tg',name:'Telegram',
+      detail:tg?.channel?'Канал: '+tg.channel:'Пост в канал при публикации',
+      ok:!!(tg?.token&&tg?.channel),active:!!tg?.enabled,
     },
-    medium:{
-      enabled:document.getElementById('int-md-enabled').checked,
-      webhook:document.getElementById('int-md-webhook').value.trim(),
-    }
-  };
-  saveIntegrationsToStorage(data);
-  refreshIntBadges();
-  toast('Интеграции сохранены');
+    {
+      icon:`<span style="font-family:Georgia,serif;font-size:22px;font-weight:700;line-height:1">M</span>`,
+      iconClass:'int-icon-md',name:'Medium',
+      detail:'Публикация статьи на Medium',
+      ok:!!(md?.token||md?.webhook),active:!!md?.enabled,
+    },
+  ];
+  document.getElementById('int-page').innerHTML=PLATFORMS.map(p=>{
+    const label=p.ok&&p.active?'Активна':p.ok?'Подключено':'Не подключено';
+    const cls=p.ok&&p.active?' active':p.ok?' connected':'';
+    return `<div class="int-big-card">
+      <div class="int-big-head">
+        <div class="int-icon ${p.iconClass}">${p.icon}</div>
+        <div style="flex:1">
+          <div class="int-big-name">${p.name}</div>
+          <div class="int-big-desc">${p.detail}</div>
+        </div>
+        <span class="int-badge${cls}">${label}</span>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function setIntStatus(id,state){
-  const el=document.getElementById('int-'+id+'-status');
-  if(!el)return;
-  el.className='int-status'+(state?' '+state:'');
-  el.textContent=state==='ok'?'Подключено':state==='err'?'Ошибка':'';
-}
-
-async function testTelegram(){
-  const btn=document.getElementById('int-tg-test');
-  const token=document.getElementById('int-tg-token').value.trim();
-  const channel=document.getElementById('int-tg-channel').value.trim();
-  if(!token||!channel){toast('Заполните Token и Channel');return;}
-  btn.textContent='Проверка…';btn.disabled=true;
-  try{
-    const r=await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:channel,text:'✅ *MONTAS Blog* — интеграция подключена',parse_mode:'Markdown'})
-    });
-    const d=await r.json();
-    if(d.ok){toast('Telegram: тест отправлен ✓');setIntStatus('tg','ok');}
-    else{toast('Ошибка: '+d.description);setIntStatus('tg','err');}
-  }catch(e){toast('Ошибка сети');setIntStatus('tg','err');}
-  btn.textContent='Тест';btn.disabled=false;
-}
-
-async function testMedium(){
-  const btn=document.getElementById('int-md-test');
-  const webhook=document.getElementById('int-md-webhook').value.trim();
-  if(!webhook){toast('Введите Webhook URL');return;}
-  btn.textContent='Проверка…';btn.disabled=true;
-  try{
-    const r=await fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({_test:true,title:'MONTAS test ping'})});
-    if(r.ok){toast('Webhook ответил ✓');setIntStatus('md','ok');}
-    else{toast('Webhook вернул '+r.status);setIntStatus('md','err');}
-  }catch(e){toast('Ошибка: проверьте URL');setIntStatus('md','err');}
-  btn.textContent='Тест';btn.disabled=false;
+function updateIntSbDot(){
+  const cfg=loadIntegrations();
+  const tg=cfg.telegram;const md=cfg.medium;
+  const hasActive=(tg?.enabled&&tg?.token)||(md?.enabled&&(md?.token||md?.webhook));
+  const dot=document.getElementById('int-sb-badge');
+  if(dot) dot.style.display=hasActive?'':'none';
 }
 
 async function publishToTelegram(article,cfg){
