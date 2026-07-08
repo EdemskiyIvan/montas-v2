@@ -238,6 +238,14 @@ button{font-family:inherit}
 .toggle input:checked~.toggle-track{background:var(--accent)}
 .toggle input:checked~.toggle-track::before{transform:translateX(16px)}
 
+/* ── CASES ── */
+.c-services{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px}
+.c-srv{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);cursor:pointer;transition:all .12s;user-select:none;background:transparent;color:var(--muted)}
+.c-srv:hover{border-color:var(--accent);color:var(--accent)}
+.c-srv.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.c-period{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.c-period-lbl{font-size:10px;color:var(--muted2);margin-bottom:4px;font-family:ui-monospace,monospace;letter-spacing:.05em;text-transform:uppercase}
+
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 18px;border-radius:9px;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;display:flex;align-items:center;gap:8px}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -286,6 +294,15 @@ button{font-family:inherit}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Новая статья
       </button>
+      <button class="sb-link" data-view="cases" onclick="showView('cases')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+        Кейсы
+        <span class="sb-count" id="sb-count-cases">0</span>
+      </button>
+      <button class="sb-link" data-view="case-editor" onclick="newCase()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Новый кейс
+      </button>
       <div class="sb-section" style="margin-top:12px">Прочее</div>
       <button class="sb-link" data-view="integrations" onclick="showView('integrations')">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
@@ -332,6 +349,18 @@ button{font-family:inherit}
           </div>
         </div>
         <div id="articles-list"></div>
+      </div>
+
+      <!-- Cases view -->
+      <div class="view" id="view-cases">
+        <div class="stats-row" id="case-stats-row"></div>
+        <div class="list-bar">
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="case-search-inp" placeholder="Поиск по кейсам..." oninput="renderCaseList()">
+          </div>
+        </div>
+        <div id="cases-list"></div>
       </div>
 
       <!-- Settings view -->
@@ -492,6 +521,126 @@ button{font-family:inherit}
         </div>
       </div>
     </div>
+    <!-- Case Editor -->
+    <div class="view-full" id="view-case-editor">
+      <div class="editor-shell">
+        <div class="editor-left">
+          <textarea class="e-title" id="c-title" rows="1" placeholder="Название проекта" oninput="autoHeight(this);autoCaseSlug()" spellcheck="true"></textarea>
+          <div class="e-slug-row">
+            <span class="e-slug-pre">montas.agency/cases/</span>
+            <input class="e-slug" id="c-slug" type="text" placeholder="slug-url" spellcheck="false">
+          </div>
+          <div class="toolbar">
+            <button class="tb-btn" title="Жирный" onclick="fmtCase('bold')"><b>B</b></button>
+            <button class="tb-btn" title="Курсив" onclick="fmtCase('italic')"><i>I</i></button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn" title="Заголовок H2" onclick="fmtCase('h2')">H2</button>
+            <button class="tb-btn" title="Заголовок H3" onclick="fmtCase('h3')">H3</button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn" title="Цитата" onclick="fmtCase('quote')">"</button>
+            <button class="tb-btn" title="Маркированный список" onclick="fmtCase('ul')">•—</button>
+            <button class="tb-btn" title="Нумерованный список" onclick="fmtCase('ol')">1.</button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn" title="Ссылка" onclick="fmtCase('link')">🔗</button>
+            <button class="tb-btn" title="Убрать форматирование" onclick="fmtCase('clear')" style="margin-left:auto">✕</button>
+          </div>
+          <div class="editor-area" id="c-content" contenteditable="true" data-placeholder="Опишите проект: задача, решение, результаты..." spellcheck="true"></div>
+        </div>
+        <div class="editor-right">
+          <div class="er-sec">
+            <span class="er-lbl">Статус</span>
+            <div class="status-row">
+              <button class="st-btn" id="c-st-draft" onclick="setCaseStatus('draft')">Черновик</button>
+              <button class="st-btn" id="c-st-pub" onclick="setCaseStatus('published')">Опубликовать</button>
+            </div>
+          </div>
+          <div class="er-sec">
+            <label class="er-lbl" for="c-client">Клиент</label>
+            <input class="er-inp" id="c-client" type="text" placeholder="Название компании">
+          </div>
+          <div class="er-sec">
+            <label class="er-lbl" for="c-industry">Отрасль</label>
+            <select class="er-sel" id="c-industry">
+              <option>Маркетинг</option>
+              <option>Строительство и девелопмент</option>
+              <option>Логистика</option>
+              <option>Ритейл и e-commerce</option>
+              <option>IT и SaaS</option>
+              <option>Финтех</option>
+              <option>Ресторанный бизнес</option>
+              <option>Недвижимость</option>
+              <option>Медицина и здоровье</option>
+              <option>Образование</option>
+              <option>Другое</option>
+            </select>
+          </div>
+          <div class="er-sec">
+            <span class="er-lbl">Услуги</span>
+            <div class="c-services" id="c-services">
+              <button class="c-srv" data-srv="Маркетинг" onclick="toggleSrv(this)">Маркетинг</button>
+              <button class="c-srv" data-srv="Дизайн" onclick="toggleSrv(this)">Дизайн</button>
+              <button class="c-srv" data-srv="Разработка" onclick="toggleSrv(this)">Разработка</button>
+              <button class="c-srv" data-srv="SMM" onclick="toggleSrv(this)">SMM</button>
+              <button class="c-srv" data-srv="SEO" onclick="toggleSrv(this)">SEO</button>
+              <button class="c-srv" data-srv="Аналитика" onclick="toggleSrv(this)">Аналитика</button>
+              <button class="c-srv" data-srv="AI" onclick="toggleSrv(this)">AI</button>
+              <button class="c-srv" data-srv="Брендинг" onclick="toggleSrv(this)">Брендинг</button>
+            </div>
+          </div>
+          <div class="er-sec">
+            <span class="er-lbl">Период работы</span>
+            <div class="c-period">
+              <div>
+                <div class="c-period-lbl">С</div>
+                <input class="er-inp" id="c-period-from" type="month">
+              </div>
+              <div>
+                <div class="c-period-lbl">По</div>
+                <input class="er-inp" id="c-period-to" type="month" placeholder="по н.в.">
+              </div>
+            </div>
+          </div>
+          <div class="er-sec">
+            <label class="er-lbl" for="c-result">Ключевой результат</label>
+            <textarea class="er-ta" id="c-result" placeholder="Например: +40% к конверсии за 3 месяца" rows="2"></textarea>
+          </div>
+          <div class="er-sec">
+            <span class="er-lbl">Обложка</span>
+            <div class="cover-tabs">
+              <button class="ctab active" id="c-ctab-file" onclick="switchCaseCoverTab('file')">Загрузить файл</button>
+              <button class="ctab" id="c-ctab-url" onclick="switchCaseCoverTab('url')">URL</button>
+            </div>
+            <div id="c-cover-file-tab">
+              <div class="cover-zone" id="c-cover-zone" onclick="document.getElementById('c-cover-file-inp').click()">
+                <div class="cover-zone-empty">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                  <span>Нажмите или перетащите</span>
+                  <small>PNG, JPG, WEBP до 2 МБ</small>
+                </div>
+                <img class="cover-zone-img" id="c-cover-zone-img" src="" alt="">
+                <button class="cover-zone-rm" id="c-cover-zone-rm" onclick="clearCasecover(event)" title="Удалить">×</button>
+              </div>
+              <input type="file" id="c-cover-file-inp" accept="image/*" style="display:none" onchange="handleCaseCoverFile(event)">
+            </div>
+            <div id="c-cover-url-tab" style="display:none">
+              <input class="er-inp" id="c-cover-url" type="url" placeholder="https://..." oninput="onCaseCoverUrlInput()">
+              <img class="cover-preview" id="c-cover-url-preview" src="" alt="" style="display:none" onerror="this.style.display='none'" onload="this.style.display='block'">
+            </div>
+          </div>
+          <div class="er-sec">
+            <label class="er-lbl" for="c-date">Дата публикации</label>
+            <input class="er-inp" id="c-date" type="date">
+          </div>
+        </div>
+      </div>
+      <div class="save-bar">
+        <span class="save-info" id="c-save-info">Несохранённые изменения</span>
+        <div class="save-actions">
+          <button class="btn-del" id="c-btn-del" onclick="confirmDeleteCase(null)" style="display:none">Удалить</button>
+          <button class="btn-save" onclick="saveCase()">Сохранить</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -503,6 +652,18 @@ button{font-family:inherit}
     <div class="modal-btns">
       <button class="m-cancel" onclick="closeModal()">Отмена</button>
       <button class="m-confirm" onclick="doDelete()">Удалить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete case modal -->
+<div class="overlay" id="del-case-overlay">
+  <div class="modal">
+    <h3>Удалить кейс?</h3>
+    <p>Это действие необратимо. Кейс будет удалён из базы.</p>
+    <div class="modal-btns">
+      <button class="m-cancel" onclick="closeCaseModal()">Отмена</button>
+      <button class="m-confirm" onclick="doDeleteCase()">Удалить</button>
     </div>
   </div>
 </div>
@@ -601,9 +762,12 @@ function persist(){localStorage.setItem(DB_KEY,JSON.stringify(articles))}
 // ── INIT ──
 function initApp(){
   articles=loadArticles();
+  cases=loadCases();
   updateSbCount();
+  updateSbCountCases();
   renderStats();
   renderList();
+  renderCaseStats();
   showView('articles');
   updateIntSbDot();
   // strip inline font/background on paste
@@ -636,7 +800,7 @@ function showView(name){
   document.querySelectorAll('.view-full').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
 
-  const titles={articles:'Статьи',editor:editingId?'Редактировать статью':'Новая статья',settings:'Настройки',integrations:'Интеграции'};
+  const titles={articles:'Статьи',editor:editingId?'Редактировать статью':'Новая статья',cases:'Кейсы','case-editor':editingCaseId?'Редактировать кейс':'Новый кейс',settings:'Настройки',integrations:'Интеграции'};
   document.getElementById('mh-title').textContent=titles[name]||'';
 
   const acts=document.getElementById('mh-actions');
@@ -651,6 +815,13 @@ function showView(name){
   } else if(name==='editor'){
     document.getElementById('view-editor').classList.add('active');
     acts.innerHTML='<button class="btn-secondary" onclick="showView(\'articles\')">← К списку</button>';
+  } else if(name==='cases'){
+    document.getElementById('view-cases').classList.add('active');
+    renderCaseStats();renderCaseList();
+    acts.innerHTML='<button class="btn-primary" onclick="newCase()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="width:13px;height:13px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Новый кейс</button>';
+  } else if(name==='case-editor'){
+    document.getElementById('view-case-editor').classList.add('active');
+    acts.innerHTML='<button class="btn-secondary" onclick="showView(\'cases\')">← К кейсам</button>';
   } else if(name==='settings'){
     document.getElementById('view-settings').classList.add('active');
   } else if(name==='integrations'){
@@ -1293,23 +1464,283 @@ async function publishIntegrations(article){
   if(res.length) toast(res.join(' · '));
 }
 
+// ══════════════════════════════════════
+// ── CASES ──
+// ══════════════════════════════════════
+const CASES_KEY = 'montas_cases';
+let cases = [];
+let editingCaseId = null;
+let deleteCaseTargetId = null;
+let currentCaseStatus = 'draft';
+let currentCaseCoverData = '';
+let currentCaseServices = [];
+
+function loadCases(){
+  try{const r=localStorage.getItem(CASES_KEY);if(r){const p=JSON.parse(r);if(Array.isArray(p))return p;}}catch(e){}
+  return [];
+}
+function persistCases(){localStorage.setItem(CASES_KEY,JSON.stringify(cases));}
+
+function updateSbCountCases(){
+  document.getElementById('sb-count-cases').textContent=cases.length;
+}
+
+function renderCaseStats(){
+  const pub=cases.filter(c=>c.status==='published').length;
+  const draft=cases.filter(c=>c.status==='draft').length;
+  document.getElementById('case-stats-row').innerHTML=`
+    <div class="stat-card"><div class="stat-n">${cases.length}</div><div class="stat-l">Всего кейсов</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:#059669">${pub}</div><div class="stat-l">Опубликовано</div></div>
+    <div class="stat-card"><div class="stat-n" style="color:var(--muted2)">${draft}</div><div class="stat-l">Черновиков</div></div>
+  `;
+}
+
+function renderCaseList(){
+  const q=(document.getElementById('case-search-inp').value||'').toLowerCase();
+  const filtered=cases
+    .filter(c=>!q||c.title.toLowerCase().includes(q)||(c.client||'').toLowerCase().includes(q))
+    .sort((a,b)=>b.updatedAt-a.updatedAt);
+  const el=document.getElementById('cases-list');
+  if(!filtered.length){
+    el.innerHTML=`<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg><p>${q?'Ничего не найдено':'Кейсов пока нет. Создайте первый!'}</p></div>`;
+    return;
+  }
+  el.innerHTML=filtered.map(c=>{
+    const cover=c.cover
+      ?`<img class="art-cover" src="${esc(c.cover)}" alt="" onerror="this.style.display='none'">`
+      :`<div class="art-cover-ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></div>`;
+    const srvs=(c.services||[]).slice(0,3).join(', ');
+    return `<div class="art-row" onclick="editCase('${c.id}')">
+      ${cover}
+      <div class="art-info">
+        <div class="art-title">${esc(c.title||'Без названия')}</div>
+        <div class="art-meta">${esc(c.client||'')}${c.industry?' · '+esc(c.industry):''}${srvs?' · '+esc(srvs):''} · ${timeAgo(c.updatedAt)}</div>
+      </div>
+      <span class="badge ${c.status}">${c.status==='published'?'Опубликовано':'Черновик'}</span>
+      <div class="row-actions" onclick="event.stopPropagation()">
+        <button class="row-btn del" onclick="confirmDeleteCase('${c.id}')">Удалить</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function newCase(){
+  editingCaseId=null;
+  currentCaseServices=[];
+  currentCaseCoverData='';
+  currentCaseStatus='draft';
+  document.getElementById('c-title').value='';
+  document.getElementById('c-slug').value='';
+  document.getElementById('c-client').value='';
+  document.getElementById('c-industry').value='Маркетинг';
+  document.getElementById('c-period-from').value='';
+  document.getElementById('c-period-to').value='';
+  document.getElementById('c-result').value='';
+  document.getElementById('c-content').innerHTML='';
+  document.getElementById('c-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('c-btn-del').style.display='none';
+  setCaseStatus('draft');
+  renderCaseServices();
+  setCaseCoverPreview('');
+  switchCaseCoverTab('file');
+  document.getElementById('c-save-info').textContent='Новый кейс';
+  showView('case-editor');
+  setTimeout(()=>document.getElementById('c-title').focus(),50);
+}
+
+function editCase(id){
+  const c=cases.find(x=>x.id===id);
+  if(!c)return;
+  editingCaseId=id;
+  currentCaseServices=[...(c.services||[])];
+  document.getElementById('c-title').value=c.title||'';
+  document.getElementById('c-slug').value=c.slug||'';
+  document.getElementById('c-client').value=c.client||'';
+  document.getElementById('c-industry').value=c.industry||'Маркетинг';
+  document.getElementById('c-period-from').value=c.periodFrom||'';
+  document.getElementById('c-period-to').value=c.periodTo||'';
+  document.getElementById('c-result').value=c.result||'';
+  document.getElementById('c-content').innerHTML=c.content||'';
+  document.getElementById('c-date').value=c.date||'';
+  document.getElementById('c-btn-del').style.display='';
+  setCaseStatus(c.status||'draft');
+  renderCaseServices();
+  if(c.cover&&c.cover.startsWith('data:')){
+    switchCaseCoverTab('file');setCaseCoverPreview(c.cover);
+  } else if(c.cover){
+    switchCaseCoverTab('url');
+    document.getElementById('c-cover-url').value=c.cover;
+    const p=document.getElementById('c-cover-url-preview');p.src=c.cover;p.style.display='block';
+    currentCaseCoverData=c.cover;
+  } else {
+    switchCaseCoverTab('file');setCaseCoverPreview('');
+  }
+  document.getElementById('c-save-info').textContent='Последнее изменение: '+fmtDate(new Date(c.updatedAt).toISOString().slice(0,10));
+  showView('case-editor');
+  requestAnimationFrame(()=>autoHeight(document.getElementById('c-title')));
+}
+
+function setCaseStatus(s){
+  currentCaseStatus=s;
+  document.getElementById('c-st-draft').className='st-btn'+(s==='draft'?' on-draft':'');
+  document.getElementById('c-st-pub').className='st-btn'+(s==='published'?' on-pub':'');
+}
+
+function saveCase(){
+  const title=document.getElementById('c-title').value.trim();
+  if(!title){toast('Введите название кейса');return;}
+  const slug=document.getElementById('c-slug').value.trim()||toSlug(title);
+  const now=Date.now();
+  const existing=editingCaseId?cases.find(c=>c.id===editingCaseId):null;
+  const c={
+    id:editingCaseId||'case-'+Math.random().toString(36).slice(2,9),
+    title,slug,status:currentCaseStatus,
+    client:document.getElementById('c-client').value.trim(),
+    industry:document.getElementById('c-industry').value,
+    services:[...currentCaseServices],
+    periodFrom:document.getElementById('c-period-from').value,
+    periodTo:document.getElementById('c-period-to').value,
+    result:document.getElementById('c-result').value.trim(),
+    cover:currentCaseCoverData,
+    date:document.getElementById('c-date').value,
+    content:document.getElementById('c-content').innerHTML,
+    createdAt:existing?existing.createdAt:now,
+    updatedAt:now,
+  };
+  if(editingCaseId){
+    const idx=cases.findIndex(x=>x.id===editingCaseId);
+    cases[idx]=c;
+  } else {
+    editingCaseId=c.id;
+    cases.unshift(c);
+    document.getElementById('c-btn-del').style.display='';
+  }
+  persistCases();updateSbCountCases();renderCaseStats();
+  document.getElementById('c-save-info').textContent='Сохранено: '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+  toast(c.status==='published'?'Кейс опубликован':'Черновик сохранён');
+}
+
+function autoCaseSlug(){
+  if(!editingCaseId) document.getElementById('c-slug').value=toSlug(document.getElementById('c-title').value);
+}
+
+function toggleSrv(btn){
+  const srv=btn.dataset.srv;
+  if(currentCaseServices.includes(srv)){
+    currentCaseServices=currentCaseServices.filter(s=>s!==srv);
+    btn.classList.remove('on');
+  } else {
+    currentCaseServices.push(srv);
+    btn.classList.add('on');
+  }
+}
+
+function renderCaseServices(){
+  document.querySelectorAll('#c-services .c-srv').forEach(btn=>{
+    btn.classList.toggle('on',currentCaseServices.includes(btn.dataset.srv));
+  });
+}
+
+function fmtCase(cmd){
+  document.getElementById('c-content').focus();
+  if(cmd==='bold')document.execCommand('bold');
+  else if(cmd==='italic')document.execCommand('italic');
+  else if(cmd==='h2')document.execCommand('formatBlock',false,'h2');
+  else if(cmd==='h3')document.execCommand('formatBlock',false,'h3');
+  else if(cmd==='quote')document.execCommand('formatBlock',false,'blockquote');
+  else if(cmd==='ul')document.execCommand('insertUnorderedList');
+  else if(cmd==='ol')document.execCommand('insertOrderedList');
+  else if(cmd==='clear')document.execCommand('removeFormat');
+  else if(cmd==='link'){const url=prompt('Ссылка:');if(url)document.execCommand('createLink',false,url);}
+}
+
+// Case cover
+function switchCaseCoverTab(tab){
+  document.getElementById('c-ctab-file').classList.toggle('active',tab==='file');
+  document.getElementById('c-ctab-url').classList.toggle('active',tab==='url');
+  document.getElementById('c-cover-file-tab').style.display=tab==='file'?'':'none';
+  document.getElementById('c-cover-url-tab').style.display=tab==='url'?'':'none';
+}
+function setCaseCoverPreview(src){
+  currentCaseCoverData=src||'';
+  const zone=document.getElementById('c-cover-zone');
+  const img=document.getElementById('c-cover-zone-img');
+  if(src){img.src=src;zone.classList.add('has-img');}
+  else{img.src='';zone.classList.remove('has-img');}
+}
+function handleCaseCoverFile(e){
+  const file=e.target.files[0];if(!file)return;
+  if(file.size>2*1024*1024){toast('Файл слишком большой. Максимум 2 МБ');return;}
+  const r=new FileReader();r.onload=ev=>setCaseCoverPreview(ev.target.result);r.readAsDataURL(file);e.target.value='';
+}
+function clearCasecover(e){
+  e.stopPropagation();setCaseCoverPreview('');
+  document.getElementById('c-cover-url').value='';
+  document.getElementById('c-cover-url-preview').style.display='none';
+}
+function onCaseCoverUrlInput(){
+  const url=document.getElementById('c-cover-url').value.trim();
+  currentCaseCoverData=url;
+  const p=document.getElementById('c-cover-url-preview');
+  if(url){p.src=url;p.style.display='block';}else{p.src='';p.style.display='none';}
+}
+function initCaseCoverDrop(){
+  const zone=document.getElementById('c-cover-zone');
+  zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
+  zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop',e=>{
+    e.preventDefault();zone.classList.remove('drag-over');
+    const file=e.dataTransfer.files[0];
+    if(file&&file.type.startsWith('image/')){
+      if(file.size>2*1024*1024){toast('Файл слишком большой. Максимум 2 МБ');return;}
+      const r=new FileReader();r.onload=ev=>setCaseCoverPreview(ev.target.result);r.readAsDataURL(file);
+    }
+  });
+}
+
+// Case delete
+function confirmDeleteCase(id){
+  deleteCaseTargetId=id||editingCaseId;
+  document.getElementById('del-case-overlay').classList.add('show');
+}
+function closeCaseModal(){
+  deleteCaseTargetId=null;
+  document.getElementById('del-case-overlay').classList.remove('show');
+}
+function doDeleteCase(){
+  if(!deleteCaseTargetId)return;
+  cases=cases.filter(c=>c.id!==deleteCaseTargetId);
+  persistCases();updateSbCountCases();renderCaseStats();renderCaseList();
+  closeCaseModal();
+  if(deleteCaseTargetId===editingCaseId){editingCaseId=null;showView('cases');}
+  deleteCaseTargetId=null;
+  toast('Кейс удалён');
+}
+
 // ── BOOT ──
 if(isAuth()){
   document.getElementById('login').style.display='none';
   document.getElementById('app').classList.add('visible');
   initApp();
   initCoverDrop();
+  initCaseCoverDrop();
 }
 document.addEventListener('DOMContentLoaded',()=>{
   if(!isAuth()) return;
   initCoverDrop();
+  initCaseCoverDrop();
 });
 
 // close modals on overlay click
 document.getElementById('del-overlay').addEventListener('click',function(e){if(e.target===this)closeModal()});
 document.getElementById('clear-overlay').addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')});
 // Ctrl+S to save
-document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'&&document.getElementById('view-editor').classList.contains('active')){e.preventDefault();saveArticle();}});
+document.addEventListener('keydown',e=>{
+  if(!(e.ctrlKey||e.metaKey)||e.key!=='s') return;
+  if(document.getElementById('view-editor').classList.contains('active')){e.preventDefault();saveArticle();}
+  else if(document.getElementById('view-case-editor').classList.contains('active')){e.preventDefault();saveCase();}
+});
+document.getElementById('del-case-overlay').addEventListener('click',function(e){if(e.target===this)closeCaseModal()});
 </script>
 </body>
 </html>
