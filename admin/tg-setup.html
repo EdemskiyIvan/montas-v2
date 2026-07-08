@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Telegram Setup</title>
+<style>
+body{font-family:system-ui,sans-serif;max-width:560px;margin:60px auto;padding:0 20px;background:#f9f9f9;color:#111}
+h1{font-size:20px;margin-bottom:6px}
+p{font-size:13px;color:#666;margin-bottom:24px;line-height:1.5}
+.card{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:20px 24px;margin-bottom:16px}
+.label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:#999;margin-bottom:6px}
+.val{font-size:22px;font-weight:700;color:#1a5cff;font-variant-numeric:tabular-nums}
+.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px;font-size:14px}
+.step-n{width:24px;height:24px;border-radius:50%;background:#1a5cff;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:7px;background:#1a5cff;color:#fff;border:none;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn:hover{background:#1448d6}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-green{background:#16a34a}.btn-green:hover{background:#15803d}
+.status{margin-top:12px;font-size:13px;padding:10px 14px;border-radius:7px;display:none}
+.status.ok{background:#dcfce7;color:#166534;display:block}
+.status.err{background:#fee2e2;color:#991b1b;display:block}
+.status.info{background:#eff6ff;color:#1e40af;display:block}
+code{background:#f1f1f1;padding:2px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<h1>Настройка Telegram бота</h1>
+<p>Эта страница поможет найти правильный <code>chat_id</code> и проверить отправку.</p>
+
+<div class="card">
+  <div class="step">
+    <div class="step-n">1</div>
+    <div>Открой Telegram, найди <strong>@montas_leads_bot</strong> и отправь ему <strong>/start</strong> (если ещё не делал)</div>
+  </div>
+  <div class="step">
+    <div class="step-n">2</div>
+    <div>Нажми кнопку ниже — страница сама найдёт твой chat_id</div>
+  </div>
+  <button class="btn" id="btn-find" onclick="findChatId()">Найти мой chat_id</button>
+  <div class="status" id="status-find"></div>
+</div>
+
+<div class="card" id="card-result" style="display:none">
+  <div class="label">Твой chat_id</div>
+  <div class="val" id="found-id">—</div>
+  <div style="margin-top:16px">
+    <button class="btn btn-green" id="btn-test" onclick="testSend()">Отправить тест в Telegram</button>
+    <div class="status" id="status-test"></div>
+  </div>
+  <div style="margin-top:16px;font-size:13px;color:#555">
+    Скопируй этот chat_id и передай разработчику чтобы вставить в код.
+  </div>
+</div>
+
+<script>
+const TOKEN='8978813830:AAHZ9N9HR8J3sJ27GUpE0uGFfnP09envVNw';
+let foundChatId=null;
+
+async function findChatId(){
+  const btn=document.getElementById('btn-find');
+  const st=document.getElementById('status-find');
+  btn.disabled=true;btn.textContent='Ищем…';
+  st.className='status info';st.style.display='block';st.textContent='Запрашиваем обновления от бота…';
+  try{
+    const r=await fetch(`https://api.telegram.org/bot${TOKEN}/getUpdates?limit=20&allowed_updates=["message"]`);
+    const d=await r.json();
+    if(!d.ok){st.className='status err';st.textContent='Ошибка API: '+d.description;btn.disabled=false;btn.textContent='Повторить';return;}
+    const updates=d.result||[];
+    if(!updates.length){
+      st.className='status err';
+      st.innerHTML='Сообщений не найдено.<br><strong>Отправь /start боту @montas_leads_bot в Telegram</strong> и нажми «Найти» снова.';
+      btn.disabled=false;btn.textContent='Найти мой chat_id';return;
+    }
+    // find most recent message chat id
+    // collect all unique chats
+    const chats={};
+    updates.forEach(u=>{
+      const c=u.message?.chat||u.callback_query?.message?.chat;
+      if(c) chats[c.id]={id:c.id,type:c.type,title:c.title||c.first_name||c.username||'—'};
+    });
+    const list=Object.values(chats);
+    if(!list.length){
+      st.className='status err';
+      st.innerHTML='Сообщений не найдено.<br><strong>Отправь /start боту @montas_leads_bot в Telegram</strong> и нажми «Найти» снова.';
+      btn.disabled=false;btn.textContent='Найти мой chat_id';return;
+    }
+    foundChatId=list[list.length-1].id;
+    document.getElementById('found-id').textContent=list.map(c=>`${c.type}: <b>${c.title}</b> → <code>${c.id}</code>`).join('<br>');
+    document.getElementById('card-result').style.display='block';
+    st.className='status ok';st.textContent='Нашли '+list.length+' чат(ов)';
+    btn.textContent='Обновить';btn.disabled=false;
+  }catch(e){
+    st.className='status err';st.textContent='Сетевая ошибка: '+e.message;
+    btn.disabled=false;btn.textContent='Повторить';
+  }
+}
+
+async function testSend(){
+  if(!foundChatId)return;
+  const btn=document.getElementById('btn-test');
+  const st=document.getElementById('status-test');
+  btn.disabled=true;btn.textContent='Отправляем…';
+  st.style.display='none';
+  try{
+    const url=`https://api.telegram.org/bot${TOKEN}/sendMessage?`+new URLSearchParams({chat_id:foundChatId,text:'✅ Тест от MONTAS! Заявки будут приходить сюда.'});
+    const r=await fetch(url);
+    const d=await r.json();
+    if(d.ok){
+      st.className='status ok';st.textContent='Сообщение отправлено! Проверь Telegram.';
+    }else{
+      st.className='status err';st.textContent='Ошибка: '+d.description+' ('+d.error_code+')';
+    }
+    st.style.display='block';
+  }catch(e){
+    st.className='status err';st.textContent='Сетевая ошибка: '+e.message;st.style.display='block';
+  }
+  btn.disabled=false;btn.textContent='Отправить тест снова';
+}
+</script>
+</body>
+</html>

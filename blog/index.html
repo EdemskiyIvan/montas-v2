@@ -26,7 +26,7 @@ img{display:block;max-width:100%}
 /* NAV */
 .nav{position:fixed;left:0;right:0;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--line);transition:box-shadow .2s}
 .nav.scrolled{box-shadow:0 2px 20px rgba(0,0,0,.06)}
-.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,64px);height:72px;gap:32px}
+.nav-inner{width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4vw,64px);height:72px;gap:32px}
 .nav-logo{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
 .nav-sq{width:9px;height:9px;background:var(--accent);flex-shrink:0}
 .nav-links{display:flex;align-items:center;gap:32px}
@@ -72,8 +72,13 @@ img{display:block;max-width:100%}
 .blog-hero-sub{font-size:clamp(14px,1.2vw,16px);color:var(--muted);line-height:1.7;max-width:480px}
 @media(max-width:860px){.blog-hero-inner{grid-template-columns:1fr}}
 
-.blog-hero-filter{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:clamp(32px,4vw,48px);padding-bottom:clamp(32px,4vw,48px)}
-.filter-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1}
+.blog-hero-filter{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:14px;padding-bottom:clamp(16px,2vw,20px)}
+.blog-hero-socials{display:flex;align-items:center;gap:8px}
+.blog-social-link{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;border:1px solid var(--line);color:var(--muted);transition:border-color .15s,color .15s,background .15s}
+.blog-social-link:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.blog-hero-filter-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-left:auto}
+.filter-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+@media(max-width:700px){.blog-hero-filter{flex-direction:column;align-items:flex-start}.blog-hero-filter-right{margin-left:0;width:100%}.search-wrap{width:100%}.search-inp{width:100%}}
 .filter-tab{
   font-family:'SF Mono',ui-monospace,monospace;
   font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
@@ -104,7 +109,7 @@ img{display:block;max-width:100%}
 @media(max-width:600px){.search-inp{width:100%}.blog-filter-inner{flex-direction:column;align-items:stretch}.search-wrap{width:100%}}
 
 /* GRID */
-.blog-main{padding:clamp(40px,5vw,64px) clamp(20px,4vw,64px) clamp(60px,8vw,100px)}
+.blog-main{padding:clamp(16px,2vw,24px) clamp(20px,4vw,64px) clamp(60px,8vw,100px)}
 .blog-main-inner{max-width:1280px;margin:0 auto}
 .blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px)}
 .blog-card{
@@ -127,9 +132,11 @@ img{display:block;max-width:100%}
 .blog-card:hover .blog-card-link{gap:7px}
 .blog-card-link svg{width:12px;height:12px}
 
-/* COUNT */
-.blog-count{font-size:13px;color:var(--muted);margin-bottom:clamp(24px,3vw,36px)}
+/* TOOLBAR */
+.blog-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:clamp(20px,2.5vw,32px)}
+.blog-count{font-size:13px;color:var(--muted)}
 .blog-count strong{color:var(--ink);font-weight:600}
+@media(max-width:700px){.blog-toolbar{flex-direction:column;align-items:flex-start}.search-wrap{width:100%}.search-inp{width:100%}}
 
 /* EMPTY */
 .blog-empty{
@@ -167,13 +174,14 @@ img{display:block;max-width:100%}
 }
 @media(max-width:580px){.blog-grid{grid-template-columns:1fr}}
 @media(max-width:500px){.footer-grid{grid-template-columns:1fr}}
+.nav-logo-img{height:26px;width:auto;display:block}.footer-logo-img{height:22px;width:auto;display:block}
 </style>
 </head>
 <body>
 
 <header class="nav" id="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo"><div class="nav-sq"></div>MONTAS</a>
+    <a href="/" class="nav-logo"><img src="/assets/logo.svg" alt="MONTAS" class="nav-logo-img"></a>
     <nav class="nav-links">
       <a href="/#services">Услуги</a>
       <a href="/#cases">Кейсы</a>
@@ -206,72 +214,59 @@ img{display:block;max-width:100%}
       <h1>Маркетинг, дизайн<br>и <em>рост бизнеса</em></h1>
       <p class="blog-hero-sub">Делимся опытом, разбираем кейсы и рассказываем о том, что реально работает для малого и среднего бизнеса</p>
       <div class="blog-hero-filter">
-        <div class="filter-tabs" id="filter-tabs">
-          <button class="filter-tab active" data-cat="">Все статьи</button>
-        </div>
-        <div class="search-wrap">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-          <input class="search-inp" id="search-inp" type="text" placeholder="Поиск по статьям…" autocomplete="off">
-          <button class="search-clear" id="search-clear" aria-label="Очистить">✕</button>
-        </div>
+        <div class="blog-hero-socials" id="blog-socials"></div>
       </div>
     </div>
   </div>
 
   <div class="blog-main">
     <div class="blog-main-inner">
-      <p class="blog-count" id="blog-count"></p>
+      <div class="blog-toolbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          <input class="search-inp" id="search-inp" type="text" placeholder="Поиск по статьям…" autocomplete="off">
+          <button class="search-clear" id="search-clear" aria-label="Очистить">✕</button>
+        </div>
+        <div class="filter-tabs" id="filter-tabs">
+          <button class="filter-tab active" data-cat="">Все статьи</button>
+        </div>
+        <p class="blog-count" id="blog-count" style="margin-left:auto"></p>
+      </div>
       <div class="blog-grid" id="blog-grid"></div>
     </div>
   </div>
 
 </div>
 
-<footer style="background:var(--paper);border-top:1px solid var(--line)">
-  <div class="footer-inner">
-    <div class="footer-grid">
-      <div>
-        <div class="footer-logo"><div class="nav-sq"></div>MONTAS</div>
-        <p class="footer-desc">Маркетинговое агентство полного цикла для малого и среднего бизнеса, застройщиков и логистики</p>
-      </div>
-      <div class="footer-contacts">
-        <a href="tel:+79991234567" class="footer-contact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11 19.79 19.79 0 01.82.47 2 2 0 012.81 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l.91-.91a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          +7 (999) 123-45-67
-        </a>
-        <a href="https://t.me/" class="footer-contact">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 7.13l-1.68 7.93c-.12.56-.46.7-.93.43l-2.58-1.9-1.24 1.2c-.14.14-.26.26-.52.26l.18-2.63 4.75-4.29c.21-.18-.04-.28-.32-.1L7.92 14.84l-2.52-.79c-.55-.17-.56-.55.12-.82l9.84-3.79c.45-.17.85.1.57.89z"/></svg>
-          @montas
-        </a>
-        <a href="mailto:hello@montas.agency" class="footer-contact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          hello@montas.agency
-        </a>
-        <span class="footer-contact" style="pointer-events:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Москва, Пресненская наб., 12
-        </span>
-      </div>
-      <div class="footer-socials">
-        <a href="#" class="footer-social">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.66c-.63 0-.82-.5-1.94-1.63-1-.95-1.44-.95-1.69-.95-.34 0-.44.1-.44.57v1.49c0 .4-.13.64-1.17.64-1.72 0-3.63-1.04-4.97-3.01C4.72 9.99 4.34 8.25 4.34 7.88c0-.25.1-.48.57-.48h1.66c.43 0 .59.19.75.64.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.65c-.07-1.14-.67-1.24-.67-1.65 0-.21.17-.43.44-.43h2.61c.37 0 .5.19.5.61v3.27c0 .37.17.5.27.5.21 0 .38-.13.76-.51 1.18-1.32 2.02-3.35 2.02-3.35.11-.25.31-.48.74-.48h1.66c.5 0 .61.25.5.61-.21.96-2.23 3.82-2.23 3.82-.17.28-.23.4 0 .71.17.23.72.7 1.09 1.12.68.76 1.19 1.4 1.33 1.84.15.44-.08.66-.53.66z"/></svg>
-          VK
-        </a>
-        <a href="#" class="footer-social">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          Instagram
-        </a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Montas. Все права защищены.</p>
-      <a href="#" class="footer-priv">Политика конфиденциальности</a>
-    </div>
-  </div>
-</footer>
 
+
+<script src="../admin/config.js"></script>
 <script>
 const DB_KEY='montas_articles';
+
+const SOCIAL_ICONS={
+  telegram:`<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>`,
+  vk:`<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12.785 16.241s.288-.032.436-.194c.136-.148.132-.427.132-.427s-.02-1.304.587-1.496c.6-.19 1.37 1.26 2.185 1.815.617.416 1.086.325 1.086.325l2.182-.03s1.141-.071.6-.968c-.044-.073-.314-.661-1.618-1.869-1.365-1.263-1.183-1.058.462-3.243.999-1.333 1.398-2.147 1.273-2.494-.12-.332-.855-.244-.855-.244l-2.455.015s-.182-.025-.317.056c-.132.079-.217.264-.217.264s-.386 1.028-.901 1.902c-1.085 1.843-1.52 1.94-1.698 1.825-.413-.267-.31-1.075-.31-1.649 0-1.793.272-2.54-.528-2.735-.266-.064-.461-.107-1.141-.114-.872-.009-1.609.003-2.026.207-.278.136-.492.439-.361.456.161.022.526.098.72.362.25.341.241 1.107.241 1.107s.144 2.11-.335 2.372c-.329.179-.78-.186-1.748-1.854-.496-.858-.871-1.806-.871-1.806s-.072-.179-.202-.275c-.157-.116-.376-.153-.376-.153l-2.33.015s-.35.01-.479.163c-.113.136-.009.417-.009.417s1.826 4.271 3.892 6.423c1.895 1.973 4.047 1.843 4.047 1.843h.975z"/></svg>`,
+  instagram:`<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".7" fill="currentColor" stroke="none"/></svg>`,
+  youtube:`<svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>`,
+};
+
+function renderSocials(){
+  const cfg=window.MONTAS_CONFIG||{};
+  const el=document.getElementById('blog-socials');
+  if(!el)return;
+  const links=[];
+  if(cfg.telegram?.enabled&&cfg.telegram?.channel){
+    const h=cfg.telegram.channel.replace('@','');
+    links.push({href:`https://t.me/${h}`,title:'Telegram',key:'telegram'});
+  }
+  if(cfg.vk?.enabled&&cfg.vk?.url){links.push({href:cfg.vk.url,title:'ВКонтакте',key:'vk'});}
+  if(cfg.instagram?.enabled&&cfg.instagram?.url){links.push({href:cfg.instagram.url,title:'Instagram',key:'instagram'});}
+  if(cfg.youtube?.enabled&&cfg.youtube?.url){links.push({href:cfg.youtube.url,title:'YouTube',key:'youtube'});}
+  el.innerHTML=links.map(l=>`<a class="blog-social-link" href="${l.href}" target="_blank" rel="noopener" title="${l.title}">${SOCIAL_ICONS[l.key]||''}</a>`).join('');
+  el.style.display=links.length?'flex':'none';
+  document.querySelector('.blog-hero-filter').style.display=links.length?'':'none';
+}
 
 function getArticles(){
   try{const r=localStorage.getItem(DB_KEY);return r?JSON.parse(r):[];}catch{return [];}
@@ -394,6 +389,7 @@ allArticles=getArticles()
 
 buildFilters(allArticles);
 render();
+renderSocials();
 
 // Nav scroll
 const navEl=document.getElementById('nav');
@@ -410,5 +406,7 @@ mob.querySelectorAll('.m-link').forEach(a=>a.addEventListener('click',()=>{
   burger.classList.remove('open');mob.classList.remove('open');document.body.style.overflow='';
 }));
 </script>
+<script src="/assets/lead-popup.js"></script>
+<script src="/assets/site-layout.js"></script>
 </body>
 </html>

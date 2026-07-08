@@ -169,13 +169,20 @@ img{display:block;max-width:100%}
 @keyframes htab-bg-fill{from{background-size:0% 100%}to{background-size:100% 100%}}
 
 /* ─── LOGOS ─── */
-.logos{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--paper)}
-.logos-inner{max-width:1280px;margin:0 auto;padding:28px clamp(20px,3vw,40px);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-.logos-inner span{font-family:ui-monospace,monospace;font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--muted2)}
+.clients{padding:clamp(48px,6vw,72px) clamp(20px,3vw,40px);background:var(--paper)}
+.clients-inner{max-width:1280px;margin:0 auto}
+.clients-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:20px}
+.clients-logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
+.client-card{background:var(--paper-soft);border-radius:12px;aspect-ratio:3/2;display:flex;align-items:center;justify-content:center;padding:24px;transition:background .2s}
+.client-card:hover{background:#e8e7e3}
+.client-card img{max-height:40px;max-width:100%;width:auto;object-fit:contain;filter:grayscale(1)}
+@media(max-width:500px){.clients-logos{grid-template-columns:repeat(2,1fr)}}
 
 /* ─── SECTION BASE ─── */
 .sec{padding:clamp(64px,8vw,96px) clamp(20px,3vw,40px)}
 .sec-soft{background:var(--paper-soft)}
+.sec-cta-bg{background:url('/assets/cta-bg.jpg') center/cover no-repeat;position:relative}
+.sec-cta-bg::before{content:'';position:absolute;inset:0;background:rgba(5,18,40,.62);pointer-events:none}
 .sec-ink{background:var(--ink)}
 .sec-inner{max-width:1280px;margin:0 auto}
 .sec-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:clamp(40px,5vw,56px)}
@@ -291,6 +298,12 @@ img{display:block;max-width:100%}
 .team-arrow:disabled{opacity:.3;cursor:default;pointer-events:none}
 .team-arrow svg{width:16px;height:16px}
 .team-track-outer{overflow:hidden}
+.team-card-join .team-photo{background:var(--paper-soft);border:1.5px dashed rgba(26,92,255,.3);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;cursor:default}
+.team-card-join .team-photo:hover{border-color:rgba(26,92,255,.5)}
+.team-join-q{width:52px;height:52px;border-radius:12px;background:rgba(26,92,255,.08);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:var(--accent)}
+.team-join-btn{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:#fff;font-family:inherit;font-size:12px;font-weight:600;padding:9px 14px;border-radius:8px;text-decoration:none;transition:background .15s;margin-top:6px;width:fit-content}
+.team-join-btn:hover{background:#1448d6}
+.team-join-btn svg{width:13px;height:13px;flex-shrink:0}
 .team-track{
   display:flex;gap:14px;
   transition:transform .45s cubic-bezier(.16,1,.3,1);
@@ -393,8 +406,8 @@ img{display:block;max-width:100%}
 
 /* ─── CTA ─── */
 .cta-head{text-align:center;margin-bottom:clamp(32px,4vw,48px)}
-.cta-h2{font-size:clamp(28px,4vw,52px);font-weight:700;letter-spacing:-.03em;color:var(--ink);margin-bottom:12px;line-height:1.05}
-.cta-sub{font-size:clamp(14px,1.3vw,17px);line-height:1.65;color:var(--muted)}
+.cta-h2{font-size:clamp(28px,4vw,52px);font-weight:700;letter-spacing:-.03em;color:#fff;margin-bottom:12px;line-height:1.05}
+.cta-sub{font-size:clamp(14px,1.3vw,17px);line-height:1.65;color:rgba(255,255,255,.72)}
 .cta-form-wrap{
   max-width:680px;margin:0 auto;
   background:var(--paper);border:1px solid var(--line);border-radius:16px;
@@ -416,7 +429,12 @@ img{display:block;max-width:100%}
 .form-ta{resize:none;min-height:80px;line-height:1.6}
 .form-err-msg{font-size:11px;color:rgba(220,38,38,.8);margin-top:3px;display:none}
 .form-err-msg.show{display:block}
-.form-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:20px;flex-wrap:wrap}
+.form-consent{display:flex;align-items:flex-start;gap:8px;margin-top:16px}
+.form-consent input[type=checkbox]{width:15px;height:15px;flex-shrink:0;margin-top:2px;accent-color:var(--accent);cursor:pointer}
+.form-consent label{font-size:12px;color:rgba(14,15,12,.45);line-height:1.5;cursor:pointer}
+.form-consent label a{color:rgba(14,15,12,.6);text-decoration:underline}
+.form-consent label a:hover{color:var(--ink)}
+.form-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:16px;flex-wrap:wrap}
 .btn-submit{
   background:var(--accent);color:#fff;
   font-family:'Google Sans','Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:500;
@@ -458,7 +476,11 @@ img{display:block;max-width:100%}
 
 /* ─── FOOTER ─── */
 .footer-inner{max-width:1280px;margin:0 auto;padding:clamp(40px,5vw,64px) clamp(20px,3vw,40px) clamp(20px,3vw,32px)}
-.footer-grid{display:grid;grid-template-columns:1.2fr 1fr auto;gap:clamp(24px,4vw,48px);margin-bottom:clamp(32px,4vw,48px);align-items:start}
+.footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:clamp(24px,4vw,48px);margin-bottom:clamp(32px,4vw,48px);align-items:start}
+.footer-nav-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2);margin-bottom:14px}
+.footer-nav-links{display:flex;flex-direction:column;gap:8px}
+.footer-nav-link{font-size:13px;color:var(--muted);transition:color .15s}
+.footer-nav-link:hover{color:var(--ink)}
 .footer-logo{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--ink);margin-bottom:14px}
 .footer-desc{font-size:13px;line-height:1.6;color:var(--muted);max-width:280px}
 .footer-contacts{display:flex;flex-direction:column;gap:10px}
@@ -505,6 +527,7 @@ img{display:block;max-width:100%}
   .hero-btns{flex-direction:column;align-items:flex-start}
   .cta-links{flex-direction:column;align-items:flex-start}
 }
+.nav-logo-img{height:26px;width:auto;display:block}.footer-logo-img{height:22px;width:auto;display:block}
 </style>
 </head>
 <body>
@@ -513,13 +536,13 @@ img{display:block;max-width:100%}
 <header class="nav" id="nav">
   <div class="nav-inner">
     <a href="#" class="nav-logo">
-      <div class="nav-sq"></div>
-      MONTAS
+      <img src="/assets/logo.svg" alt="MONTAS" class="nav-logo-img">
     </a>
     <nav class="nav-links">
       <a href="#services">Услуги</a>
       <a href="#cases">Кейсы</a>
-      <a href="#about">О нас</a>
+      <a href="/about.html">О нас</a>
+      <a href="/blog/">Блог</a>
       <a href="#contact">Контакты</a>
     </nav>
     <a href="#contact" class="nav-cta">Оставить заявку</a>
@@ -534,6 +557,7 @@ img{display:block;max-width:100%}
   <a href="#services" class="m-link">Услуги</a>
   <a href="#cases" class="m-link">Кейсы</a>
   <a href="#about" class="m-link">О нас</a>
+  <a href="/blog/" class="m-link">Блог</a>
   <a href="#contact" class="m-link">Контакты</a>
   <a href="#contact" class="mob-btn m-link">Оставить заявку</a>
 </div>
@@ -574,17 +598,6 @@ img{display:block;max-width:100%}
     </div>
   </div>
 </section>
-
-<!-- LOGOS -->
-<div class="logos">
-  <div class="logos-inner">
-    <span>СТРОЙ+</span>
-    <span>ЛОГИСТ</span>
-    <span>РИТЕЙЛ</span>
-    <span>ZERNO</span>
-    <span>ФИНТЕХ</span>
-  </div>
-</div>
 
 <!-- ABOUT -->
 <section class="sec sec-soft" id="about">
@@ -723,7 +736,7 @@ img{display:block;max-width:100%}
         </div>
       </div>
     </div>
-    <div class="cases-grid">
+    <div class="cases-grid" id="cases-grid">
       <a href="cases/tomoru.html" class="case-item" data-service="AI,Разработка" data-business="Технологии">
         <div class="case-img">
           <img src="assets/case-tomoru.png" alt="Tomoru">
@@ -775,13 +788,29 @@ img{display:block;max-width:100%}
     </div>
     <div class="cases-empty" id="cases-empty">Нет кейсов по выбранным фильтрам</div>
     <div class="cases-cta">
-      <a href="#" class="btn-outline">
-        Смотреть все кейсы
+      <a href="/cases/" class="btn-outline">
+        Смотреть все кейсы 120+
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-left:8px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
     </div>
   </div>
 </section>
+
+<!-- CLIENTS -->
+<div class="clients">
+  <div class="clients-inner">
+    <div class="clients-label">Клиенты</div>
+    <div class="clients-logos">
+      <div class="client-card"><img src="/assets/clients/gazprom.png" alt="Газпром"></div>
+      <div class="client-card"><img src="/assets/clients/uralsib.png" alt="Уралсиб"></div>
+      <div class="client-card"><img src="/assets/clients/168-technopark.png" alt="168 Технопарк"></div>
+      <div class="client-card"><img src="/assets/clients/agima.png" alt="AGIMA"></div>
+      <div class="client-card"><img src="/assets/clients/rippa.png" alt="RIPPA"></div>
+      <div class="client-card"><img src="/assets/clients/allogic.png" alt="Allogic"></div>
+      <div class="client-card"><img src="/assets/clients/zaidi-i-uvidish.png" alt="Зайди и увидишь"></div>
+    </div>
+  </div>
+</div>
 
 <!-- PROCESS -->
 <section class="sec" id="process">
@@ -850,6 +879,17 @@ img{display:block;max-width:100%}
             <div class="team-photo"><img src="assets/team-6.png" alt="Тася Шеломова"></div>
             <div class="team-name">Тася Шеломова</div>
             <div class="team-role">Руководитель отдела дизайна</div>
+          </div>
+          <div class="team-card team-card-join">
+            <div class="team-photo">
+              <div class="team-join-q">?</div>
+            </div>
+            <div class="team-name">Возможно, здесь ваше место</div>
+            <div class="team-role">Расширяем команду и открыты к знакомству с талантливыми людьми</div>
+            <a href="https://t.me/Montas_IO" target="_blank" class="team-join-btn">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+              Написать в Telegram
+            </a>
           </div>
         </div>
       </div>
@@ -998,8 +1038,8 @@ img{display:block;max-width:100%}
 </section>
 
 <!-- CTA + FORM -->
-<section class="sec sec-soft" id="contact">
-  <div class="sec-inner">
+<section class="sec sec-cta-bg" id="contact">
+  <div class="sec-inner" style="position:relative;z-index:1">
     <div class="cta-head">
       <h2 class="cta-h2">Обсудим ваш проект?</h2>
       <p class="cta-sub">Расскажите о задаче — ответим в течение рабочего дня</p>
@@ -1036,15 +1076,19 @@ img{display:block;max-width:100%}
           <label class="form-lbl" for="f-msg">Расскажите о задаче</label>
           <textarea class="form-inp form-ta" id="f-msg" name="message" rows="3" placeholder="Коротко о проекте, бюджете или сроках — что важно знать заранее"></textarea>
         </div>
+        <div class="form-consent">
+          <input type="checkbox" id="f-consent" required>
+          <label for="f-consent">Нажимая кнопку, я даю согласие на <a href="/privacy-policy.html" target="_blank">обработку персональных данных</a> в соответствии с <a href="/privacy-policy.html" target="_blank">Политикой конфиденциальности</a></label>
+        </div>
         <div class="form-bottom">
           <button type="submit" class="btn-submit" id="f-btn">Отправить заявку</button>
           <div class="cta-messengers">
             <span style="font-size:11px;color:var(--muted2)">или напишите:</span>
-            <a href="https://t.me/" class="cta-messenger-link">
+            <a href="https://t.me/Montas_IO" target="_blank" rel="noopener" class="cta-messenger-link">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 7.13l-1.68 7.93c-.12.56-.46.7-.93.43l-2.58-1.9-1.24 1.2c-.14.14-.26.26-.52.26l.18-2.63 4.75-4.29c.21-.18-.04-.28-.32-.1L7.92 14.84l-2.52-.79c-.55-.17-.56-.55.12-.82l9.84-3.79c.45-.17.85.1.57.89z"/></svg>
               Telegram
             </a>
-            <a href="https://wa.me/" class="cta-messenger-link">
+            <a href="https://api.whatsapp.com/send/?phone=79112144344&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" class="cta-messenger-link">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
               WhatsApp
             </a>
@@ -1068,43 +1112,47 @@ img{display:block;max-width:100%}
     <div class="footer-grid">
       <div>
         <div class="footer-logo">
-          <div class="nav-sq"></div>
-          MONTAS
+          <img src="/assets/logo.svg" alt="MONTAS" class="nav-logo-img">
         </div>
         <p class="footer-desc">Маркетинговое агентство полного цикла для малого и среднего бизнеса, застройщиков и логистики</p>
       </div>
-      <div class="footer-contacts">
-        <a href="tel:+79991234567" class="footer-contact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.89 9.11 19.79 19.79 0 01.82 .47 2 2 0 012.81 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l.91-.91a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
-          +7 (999) 123-45-67
-        </a>
-        <a href="https://t.me/" class="footer-contact">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 7.13l-1.68 7.93c-.12.56-.46.7-.93.43l-2.58-1.9-1.24 1.2c-.14.14-.26.26-.52.26l.18-2.63 4.75-4.29c.21-.18-.04-.28-.32-.1L7.92 14.84l-2.52-.79c-.55-.17-.56-.55.12-.82l9.84-3.79c.45-.17.85.1.57.89z"/></svg>
-          @montas
-        </a>
-        <a href="mailto:hello@montas.agency" class="footer-contact">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          hello@montas.agency
-        </a>
-        <span class="footer-contact" style="pointer-events:none">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Москва, Пресненская наб., 12
-        </span>
+      <div>
+        <div class="footer-nav-title">Навигация</div>
+        <div class="footer-nav-links">
+          <a href="/#services" class="footer-nav-link">Услуги</a>
+          <a href="/cases/" class="footer-nav-link">Кейсы</a>
+          <a href="/#about" class="footer-nav-link">О нас</a>
+          <a href="/blog/" class="footer-nav-link">Блог</a>
+          <a href="/#contact" class="footer-nav-link">Контакты</a>
+        </div>
       </div>
-      <div class="footer-socials">
-        <a href="#" class="footer-social">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M15.07 2H8.93C3.33 2 2 3.33 2 8.93v6.14C2 20.67 3.33 22 8.93 22h6.14C20.67 22 22 20.67 22 15.07V8.93C22 3.33 20.67 2 15.07 2zm3.08 13.5h-1.66c-.63 0-.82-.5-1.94-1.63-1-.95-1.44-.95-1.69-.95-.34 0-.44.1-.44.57v1.49c0 .4-.13.64-1.17.64-1.72 0-3.63-1.04-4.97-3.01C4.72 9.99 4.34 8.25 4.34 7.88c0-.25.1-.48.57-.48h1.66c.43 0 .59.19.75.64.83 2.38 2.21 4.47 2.78 4.47.21 0 .31-.1.31-.64V9.65c-.07-1.14-.67-1.24-.67-1.65 0-.21.17-.43.44-.43h2.61c.37 0 .5.19.5.61v3.27c0 .37.17.5.27.5.21 0 .38-.13.76-.51 1.18-1.32 2.02-3.35 2.02-3.35.11-.25.31-.48.74-.48h1.66c.5 0 .61.25.5.61-.21.96-2.23 3.82-2.23 3.82-.17.28-.23.4 0 .71.17.23.72.7 1.09 1.12.68.76 1.19 1.4 1.33 1.84.15.44-.08.66-.53.66z"/></svg>
-          VK
+      <div>
+      <div class="footer-nav-title">Контакты</div>
+      <div class="footer-contacts">
+        <a href="mailto:info@montas.io" class="footer-contact">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          info@montas.io
         </a>
-        <a href="#" class="footer-social">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          Instagram
+        <a href="https://t.me/Montas_IO" target="_blank" rel="noopener" class="footer-contact">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.93 7.13l-1.68 7.93c-.12.56-.46.7-.93.43l-2.58-1.9-1.24 1.2c-.14.14-.26.26-.52.26l.18-2.63 4.75-4.29c.21-.18-.04-.28-.32-.1L7.92 14.84l-2.52-.79c-.55-.17-.56-.55.12-.82l9.84-3.79c.45-.17.85.1.57.89z"/></svg>
+          @Montas_IO
         </a>
+        <a href="https://api.whatsapp.com/send/?phone=79112144344&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" class="footer-contact">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          +7 (911) 214-43-44
+        </a>
+      </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <p class="footer-copy">© 2026 Montas. Все права защищены.</p>
-      <a href="#" class="footer-priv">Политика конфиденциальности</a>
+      <div>
+        <p class="footer-copy">© 2026 Montas. Все права защищены.</p>
+        <p class="footer-copy" style="margin-top:4px">ООО «Арабелла» · 199034, г. Санкт-Петербург, 6-я линия В.О., д. 1/25, лит. А, офис 41, пом. 13-Н</p>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap">
+        <a href="/privacy-policy.html" class="footer-priv">Политика конфиденциальности</a>
+        <a href="/cookie-policy.html" class="footer-priv">Политика cookie</a>
+      </div>
     </div>
   </div>
 </footer>
@@ -1144,13 +1192,36 @@ function startAuto(){autoTimer=setInterval(()=>{const cur=parseInt(document.quer
 tabs.forEach(t=>t.addEventListener('click',()=>{clearInterval(autoTimer);setTab(parseInt(t.dataset.idx));startAuto();}));
 startAuto();
 
+// CMS cases
+(()=>{
+  const CASES_KEY='montas_cases';
+  const grid=document.getElementById('cases-grid');
+  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+  function getCases(){try{return JSON.parse(localStorage.getItem(CASES_KEY)||'[]');}catch{return[];}}
+  function caseCardHtml(c){
+    const svcs=(c.services||[]).join(',');
+    const ind=c.industry||'';
+    const cover=c.cover&&c.cover.length>4?`<img src="${esc(c.cover)}" alt="${esc(c.title||'')}">`:'' ;
+    const desc=c.subtitle||'';
+    return `<a href="cases/viewer.html?id=${esc(c.id)}" class="case-item" data-service="${esc(svcs)}" data-business="${esc(ind)}">
+      <div class="case-img">${cover}</div>
+      <div class="case-meta">
+        <div class="case-title">${esc(c.title||'')}</div>
+        ${desc?`<div class="case-desc">${esc(desc)}</div>`:''}
+      </div>
+    </a>`;
+  }
+  const published=getCases().filter(c=>c.status==='published');
+  if(published.length) grid.innerHTML=published.map(caseCardHtml).join('');
+})();
+
 // Cases filter
 (()=>{
   let svcVal='',bizVal='';
-  const items=document.querySelectorAll('.case-item');
   const empty=document.getElementById('cases-empty');
 
   function applyFilter(){
+    const items=document.querySelectorAll('.case-item');
     let visible=0;
     items.forEach(item=>{
       const svc=item.dataset.service||'';
@@ -1341,5 +1412,6 @@ document.getElementById('cta-form').addEventListener('submit',async e=>{
   window.addEventListener('resize', () => goTo(current));
 })();
 </script>
+<script src="/assets/lead-popup.js"></script>
 </body>
 </html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>О нас — MONTAS</title>
+<meta name="description" content="MONTAS — маркетинговое агентство полного цикла из Санкт-Петербурга. Работаем с малым и средним бизнесом, застройщиками и логистическими компаниями.">
+<link rel="icon" href="/assets/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0e0f0c;
+  --paper:#fafafa;
+  --paper-soft:#f1f0ec;
+  --accent:#1a5cff;
+  --muted:rgba(14,15,12,.5);
+  --muted2:rgba(14,15,12,.3);
+  --line:rgba(14,15,12,.08);
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Google Sans','Plus Jakarta Sans',system-ui,sans-serif;background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:900;background:rgba(250,250,250,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);padding:0 clamp(20px,3vw,40px)}
+.nav-inner{max-width:1280px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.nav-logo img{height:20px;width:auto}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;color:var(--muted);transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-btn{padding:9px 20px;background:var(--accent);color:#fff;border-radius:8px;font-size:14px;font-weight:600;transition:background .15s}
+.nav-btn:hover{background:#1448d6}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* HERO */
+.about-hero{
+  padding:clamp(72px,10vw,120px) clamp(20px,3vw,40px) clamp(48px,6vw,72px);
+  background:var(--ink);
+  overflow:hidden;
+  position:relative;
+}
+.about-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(26,92,255,.18) 0%,transparent 70%);
+  pointer-events:none;
+}
+.about-hero-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:center}
+.about-hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+.about-hero-h1{font-size:clamp(36px,5vw,64px);font-weight:700;letter-spacing:-.03em;line-height:1.1;color:#fff;margin-bottom:24px}
+.about-hero-sub{font-size:clamp(15px,1.3vw,18px);line-height:1.65;color:rgba(255,255,255,.55);max-width:460px}
+.about-hero-img{border-radius:20px;overflow:hidden;aspect-ratio:4/3;object-fit:cover;object-position:center top;width:100%}
+@media(max-width:768px){
+  .about-hero-inner{grid-template-columns:1fr}
+  .about-hero-img{max-height:340px}
+}
+
+/* STATS */
+.stats-bar{background:var(--paper-soft);border-bottom:1px solid var(--line);padding:clamp(32px,4vw,48px) clamp(20px,3vw,40px)}
+.stats-bar-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+.stat-item{background:var(--paper-soft);padding:28px 32px}
+.stat-val{font-size:clamp(32px,4vw,48px);font-weight:800;letter-spacing:-.03em;color:var(--ink);line-height:1}
+.stat-lbl{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+@media(max-width:640px){.stats-bar-inner{grid-template-columns:repeat(2,1fr)}}
+
+/* SECTIONS */
+.sec{padding:clamp(64px,8vw,96px) clamp(20px,3vw,40px)}
+.sec-soft{background:var(--paper-soft)}
+.sec-inner{max-width:1280px;margin:0 auto}
+.sec-eyebrow{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
+.sec-h2{font-size:clamp(28px,3.5vw,44px);font-weight:700;letter-spacing:-.025em;line-height:1.15}
+
+/* MISSION */
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:start}
+.mission-text{font-size:clamp(15px,1.3vw,18px);line-height:1.75;color:var(--muted);margin-top:24px}
+.mission-text p+p{margin-top:16px}
+.mission-values{display:flex;flex-direction:column;gap:1px;background:var(--line);border-radius:16px;overflow:hidden;margin-top:24px}
+.value-item{background:var(--paper);padding:24px 28px;display:flex;gap:16px;align-items:flex-start}
+.value-icon{width:36px;height:36px;border-radius:10px;background:rgba(26,92,255,.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--accent)}
+.value-icon svg{width:18px;height:18px}
+.value-title{font-size:15px;font-weight:600;margin-bottom:4px}
+.value-desc{font-size:13px;color:var(--muted);line-height:1.5}
+@media(max-width:768px){.mission-grid{grid-template-columns:1fr}}
+
+/* APPROACH */
+.approach-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px);margin-top:40px}
+.approach-card{background:var(--paper-soft);border-radius:16px;padding:28px;border:1px solid var(--line)}
+.approach-num{font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.04em;margin-bottom:14px}
+.approach-title{font-size:17px;font-weight:700;letter-spacing:-.015em;margin-bottom:10px}
+.approach-desc{font-size:14px;color:var(--muted);line-height:1.6}
+@media(max-width:640px){.approach-grid{grid-template-columns:1fr}}
+
+/* TEAM GRID */
+.team-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:40px;flex-wrap:wrap}
+.team-sub{font-size:clamp(14px,1.2vw,16px);color:var(--muted);max-width:400px;line-height:1.6;margin-top:10px}
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2vw,20px)}
+.member-card{display:flex;flex-direction:column;gap:14px}
+.member-photo{aspect-ratio:3/4;border-radius:16px;overflow:hidden;background:var(--paper-soft);position:relative}
+.member-photo img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.member-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--paper-soft)}
+.member-placeholder svg{width:48px;height:48px;color:var(--muted2)}
+.member-name{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.member-role{font-size:13px;color:var(--muted);margin-top:2px}
+/* Join card */
+.join-card{display:flex;flex-direction:column}
+.join-card .member-photo{background:linear-gradient(135deg,var(--paper-soft) 0%,rgba(26,92,255,.06) 100%);border:1.5px dashed rgba(26,92,255,.25)}
+.join-q{width:60px;height:60px;border-radius:14px;background:rgba(26,92,255,.08);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:var(--accent)}
+.join-card-info{display:flex;flex-direction:column;gap:6px;flex:1}
+.join-card-title{font-size:15px;font-weight:700;letter-spacing:-.01em}
+.join-card-desc{font-size:13px;color:var(--muted);line-height:1.5}
+.join-card-btn{display:inline-flex;align-items:center;gap:7px;background:var(--accent);color:#fff;font-family:inherit;font-size:13px;font-weight:600;padding:10px 16px;border-radius:8px;text-decoration:none;transition:background .15s;width:fit-content;margin-top:4px}
+.join-card-btn:hover{background:#1448d6}
+.join-card-btn svg{width:14px;height:14px;flex-shrink:0}
+@media(max-width:900px){.team-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.team-grid{grid-template-columns:repeat(2,1fr)}}
+
+/* FOOTER SIMPLE (site-layout.js replaces this) */
+.footer-simple{background:var(--ink);padding:24px clamp(20px,4vw,64px)}
+.footer-simple-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.footer-logo-img{height:18px;filter:brightness(0) invert(1);opacity:.6}
+.footer-simple-copy{font-size:12px;color:rgba(255,255,255,.3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo"><img src="/assets/logo.svg" alt="MONTAS"></a>
+    <div class="nav-links">
+      <a href="/#services">Услуги</a>
+      <a href="/cases/">Кейсы</a>
+      <a href="/about.html" class="active">О нас</a>
+      <a href="/blog/">Блог</a>
+      <a href="/#contact">Контакты</a>
+    </div>
+    <a href="/#contact" class="nav-btn">Оставить заявку</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="about-hero">
+  <div class="about-hero-inner">
+    <div>
+      <div class="about-hero-eyebrow">О нас</div>
+      <h1 class="about-hero-h1">Маркетинг, который работает на&nbsp;результат</h1>
+      <p class="about-hero-sub">Мы — агентство полного цикла из Санкт-Петербурга. Строим маркетинг, который увеличивает продажи, а не просто создаёт красивые отчёты.</p>
+    </div>
+    <div>
+      <img src="/assets/team.jpg" alt="Команда MONTAS" class="about-hero-img">
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-bar-inner">
+    <div class="stat-item">
+      <div class="stat-val">120+</div>
+      <div class="stat-lbl">проектов запущено</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">5+</div>
+      <div class="stat-lbl">лет на рынке</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">7</div>
+      <div class="stat-lbl">специалистов в команде</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-val">3×</div>
+      <div class="stat-lbl">средний рост трафика клиентов</div>
+    </div>
+  </div>
+</div>
+
+<!-- MISSION -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="mission-grid">
+      <div>
+        <div class="sec-eyebrow">Миссия</div>
+        <h2 class="sec-h2">Не делаем маркетинг ради маркетинга</h2>
+        <div class="mission-text">
+          <p>Фокус на результат — наш основной принцип. Мы не гонимся за лайками и охватами ради красивых цифр в отчётах — каждый инструмент выбирается под конкретную бизнес-задачу.</p>
+          <p>Работаем с малым и средним бизнесом, застройщиками и логистическими компаниями. Знаем специфику каждой отрасли и говорим на языке клиента — без маркетинговой воды.</p>
+        </div>
+      </div>
+      <div>
+        <div class="mission-values">
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div>
+              <div class="value-title">Измеримый результат</div>
+              <div class="value-desc">KPI фиксируем на старте. Отчёты — в цифрах, понятных бизнесу, а не агентству.</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div>
+              <div class="value-title">Прозрачность</div>
+              <div class="value-desc">Работаем открыто: показываем что и зачем делаем, не прячем данные за «коммерческой тайной».</div>
+            </div>
+          </div>
+          <div class="value-item">
+            <div class="value-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <div>
+              <div class="value-title">Долгосрочное партнёрство</div>
+              <div class="value-desc">Большинство клиентов работают с нами годами. Строим не сделку, а отношения.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APPROACH -->
+<section class="sec sec-soft">
+  <div class="sec-inner">
+    <div class="sec-eyebrow">Подход</div>
+    <h2 class="sec-h2">Как мы работаем</h2>
+    <div class="approach-grid">
+      <div class="approach-card">
+        <div class="approach-num">01</div>
+        <div class="approach-title">Стратегия и аудит</div>
+        <div class="approach-desc">Начинаем с анализа: изучаем рынок, конкурентов и точки роста бизнеса. Формируем стратегию под конкретные цели, а не шаблон из интернета.</div>
+      </div>
+      <div class="approach-card">
+        <div class="approach-num">02</div>
+        <div class="approach-title">Запуск и тестирование</div>
+        <div class="approach-desc">Быстро тестируем гипотезы, находим работающие связки и масштабируем то, что даёт результат. Не тратим бюджет на то, что не работает.</div>
+      </div>
+      <div class="approach-card">
+        <div class="approach-num">03</div>
+        <div class="approach-title">Оптимизация и рост</div>
+        <div class="approach-desc">Постоянно анализируем данные, улучшаем кампании и ищем новые точки роста. Маркетинг — это не разовый запуск, а непрерывный процесс.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="sec">
+  <div class="sec-inner">
+    <div class="team-header">
+      <div>
+        <div class="sec-eyebrow">Команда</div>
+        <h2 class="sec-h2">Люди, которые делают результат</h2>
+        <p class="team-sub">Специалисты с опытом в маркетинге, дизайне, разработке и аналитике</p>
+      </div>
+    </div>
+    <div class="team-grid">
+
+      <!-- Член команды 1 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">Руководитель</div>
+          <div class="member-role">Управление и стратегия</div>
+        </div>
+      </div>
+
+      <!-- Член команды 2 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">Маркетолог</div>
+          <div class="member-role">Performance-маркетинг</div>
+        </div>
+      </div>
+
+      <!-- Член команды 3 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">Дизайнер</div>
+          <div class="member-role">UI/UX и брендинг</div>
+        </div>
+      </div>
+
+      <!-- Член команды 4 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">Разработчик</div>
+          <div class="member-role">Веб-разработка</div>
+        </div>
+      </div>
+
+      <!-- Член команды 5 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">Аналитик</div>
+          <div class="member-role">Данные и аналитика</div>
+        </div>
+      </div>
+
+      <!-- Член команды 6 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">SMM-специалист</div>
+          <div class="member-role">Социальные сети</div>
+        </div>
+      </div>
+
+      <!-- Член команды 7 -->
+      <div class="member-card">
+        <div class="member-photo">
+          <div class="member-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          </div>
+        </div>
+        <div>
+          <div class="member-name">Контент-маркетолог</div>
+          <div class="member-role">Тексты и контент</div>
+        </div>
+      </div>
+
+      <!-- JOIN CARD -->
+      <div class="member-card join-card">
+        <div class="member-photo">
+          <div class="member-placeholder" style="flex-direction:column;gap:12px">
+            <div class="join-q">?</div>
+          </div>
+        </div>
+        <div class="join-card-info">
+          <div class="join-card-title">Возможно, здесь ваше место</div>
+          <div class="join-card-desc">Расширяем команду и открыты к знакомству с талантливыми людьми</div>
+          <a href="https://t.me/Montas_IO" target="_blank" class="join-card-btn">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/></svg>
+            Написать в Telegram
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer-simple">
+  <div class="footer-simple-inner">
+    <div><img src="/assets/logo.svg" alt="MONTAS" class="footer-logo-img"></div>
+    <span class="footer-simple-copy">© 2026 Montas · ООО «Арабелла»</span>
+  </div>
+</footer>
+
+<script src="/assets/lead-popup.js"></script>
+<script src="/assets/site-layout.js"></script>
+</body>
+</html>
