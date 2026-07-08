@@ -206,25 +206,29 @@ img{display:block;max-width:100%}
 .about-link:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ─── SERVICES ─── */
-.srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+/* Services new layout */
+.srv-section-bg{background:linear-gradient(160deg,#e8f0ff 0%,#f0f4ff 40%,#e4eeff 100%)}
+.srv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .srv-card{
-  border:1px solid var(--line);border-radius:10px;
-  padding:clamp(20px,2.5vw,28px);
-  transition:border-color .2s ease;
-  background:var(--paper);
-  display:flex;flex-direction:column;align-items:flex-start;
+  background:#fff;border-radius:16px;
+  display:flex;align-items:stretch;gap:0;
+  overflow:hidden;
+  text-decoration:none;
+  transition:transform .2s ease,box-shadow .2s ease;
+  min-height:200px;
 }
-.srv-card:hover{border-color:rgba(26,92,255,.45)}
-.srv-icon{width:36px;height:36px;border-radius:7px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:14px;flex-shrink:0}
-.srv-icon svg{width:16px;height:16px}
-.srv-title{font-size:clamp(14px,1.4vw,16px);font-weight:600;color:var(--ink)}
-.srv-desc{font-size:clamp(12px,1vw,13px);color:var(--muted);line-height:1.65;margin-top:7px}
-.srv-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-.srv-tag{background:rgba(14,15,12,.04);border-radius:5px;padding:4px 10px;font-size:11px;color:rgba(14,15,12,.6)}
-.srv-foot{display:flex;justify-content:flex-end;margin-top:auto;padding-top:18px}
-.srv-link{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:500;color:var(--accent);transition:gap .15s}
-.srv-card:hover .srv-link{gap:8px}
-.srv-link svg{width:13px;height:13px}
+.srv-card:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(26,92,255,.1)}
+.srv-img{width:190px;min-width:190px;overflow:hidden;flex-shrink:0;background:var(--paper-soft)}
+.srv-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.srv-card:hover .srv-img img{transform:scale(1.06)}
+.srv-body{padding:clamp(22px,2.2vw,32px);flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.srv-body-text{flex:1}
+.srv-title{font-size:clamp(20px,1.9vw,26px);font-weight:700;letter-spacing:-.025em;color:var(--ink);margin-bottom:10px;line-height:1.2}
+.srv-desc{font-size:clamp(13px,1.1vw,14px);color:var(--muted);line-height:1.65}
+.srv-more{display:inline-flex;align-items:center;gap:6px;margin-top:20px;font-size:13px;font-weight:600;color:var(--accent);transition:gap .15s}
+.srv-card:hover .srv-more{gap:10px}
+@media(max-width:900px){.srv-img{width:140px;min-width:140px}}
+@media(max-width:600px){.srv-grid{grid-template-columns:1fr}.srv-img{width:110px;min-width:110px}}
 
 /* ─── CASES ─── */
 .cases-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(24px,3vw,36px)}
@@ -621,7 +625,7 @@ img{display:block;max-width:100%}
 </section>
 
 <!-- SERVICES -->
-<section class="sec" id="services">
+<section class="sec srv-section-bg" id="services">
   <div class="sec-inner">
     <div style="margin-bottom:clamp(32px,4vw,48px)">
       <h2 class="sec-h2">Услуги</h2>
@@ -629,74 +633,65 @@ img{display:block;max-width:100%}
     </div>
     <div class="srv-grid">
       <a class="srv-card" href="/services/marketing.html">
-        <div class="srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-        <div class="srv-title">Маркетинг</div>
-        <p class="srv-desc">Стратегия, медиапланирование и performance-маркетинг для роста продаж</p>
-        <div class="srv-tags">
-          <span class="srv-tag">Контекстная реклама</span>
-          <span class="srv-tag">Таргетинг</span>
-          <span class="srv-tag">SEO</span>
-          <span class="srv-tag">PR</span>
+        <div class="srv-img"><img src="/assets/services/marketing.png" alt="Маркетинг"></div>
+        <div class="srv-body">
+          <div class="srv-body-text">
+            <div class="srv-title">Маркетинг</div>
+            <p class="srv-desc">Стратегия, медиапланирование и performance-маркетинг для роста продаж</p>
+          </div>
+          <span class="srv-more">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="srv-foot"><span class="srv-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
       </a>
       <a class="srv-card" href="/services/smm.html">
-        <div class="srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 2H3v16h5v4l4-4h9V2z"/></svg></div>
-        <div class="srv-title">SMM</div>
-        <p class="srv-desc">Ведение соцсетей, контент-план и рост вовлечённости аудитории</p>
-        <div class="srv-tags">
-          <span class="srv-tag">ВКонтакте</span>
-          <span class="srv-tag">Telegram</span>
-          <span class="srv-tag">Reels</span>
-          <span class="srv-tag">Контент</span>
+        <div class="srv-img"><img src="/assets/services/smm.png" alt="SMM"></div>
+        <div class="srv-body">
+          <div class="srv-body-text">
+            <div class="srv-title">SMM</div>
+            <p class="srv-desc">Ведение соцсетей, контент-план и рост вовлечённости аудитории</p>
+          </div>
+          <span class="srv-more">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="srv-foot"><span class="srv-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
       </a>
       <a class="srv-card" href="/services/design.html">
-        <div class="srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <div class="srv-title">Дизайн</div>
-        <p class="srv-desc">Айдентика, UI/UX и графика, которые продают</p>
-        <div class="srv-tags">
-          <span class="srv-tag">UX/UI</span>
-          <span class="srv-tag">Брендинг</span>
-          <span class="srv-tag">Фирменный стиль</span>
+        <div class="srv-img"><img src="/assets/services/design.jpg" alt="Дизайн"></div>
+        <div class="srv-body">
+          <div class="srv-body-text">
+            <div class="srv-title">Дизайн</div>
+            <p class="srv-desc">Айдентика, UI/UX и графика, которые продают</p>
+          </div>
+          <span class="srv-more">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="srv-foot"><span class="srv-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
       </a>
       <a class="srv-card" href="/services/development.html">
-        <div class="srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
-        <div class="srv-title">Разработка</div>
-        <p class="srv-desc">Сайты и веб-сервисы на современном стеке</p>
-        <div class="srv-tags">
-          <span class="srv-tag">Веб-сайты</span>
-          <span class="srv-tag">Приложения</span>
-          <span class="srv-tag">Интерфейсы</span>
+        <div class="srv-img"><img src="/assets/services/development.png" alt="Разработка"></div>
+        <div class="srv-body">
+          <div class="srv-body-text">
+            <div class="srv-title">Разработка</div>
+            <p class="srv-desc">Сайты и веб-сервисы на современном стеке</p>
+          </div>
+          <span class="srv-more">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="srv-foot"><span class="srv-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
       </a>
       <a class="srv-card" href="/services/ai.html">
-        <div class="srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div>
-        <div class="srv-title">AI и автоматизация</div>
-        <p class="srv-desc">Внедрение AI-инструментов, чат-боты и автоматизация процессов</p>
-        <div class="srv-tags">
-          <span class="srv-tag">Чат-боты</span>
-          <span class="srv-tag">AI-контент</span>
-          <span class="srv-tag">Автоматизация</span>
+        <div class="srv-img"><img src="/assets/services/ai.jpg" alt="AI и автоматизация"></div>
+        <div class="srv-body">
+          <div class="srv-body-text">
+            <div class="srv-title">AI и автоматизация</div>
+            <p class="srv-desc">Внедрение AI-инструментов, чат-боты и автоматизация процессов</p>
+          </div>
+          <span class="srv-more">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="srv-foot"><span class="srv-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
       </a>
       <a class="srv-card" href="/services/analytics.html">
-        <div class="srv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
-        <div class="srv-title">Аналитика и стратегия</div>
-        <p class="srv-desc">Сквозная аналитика и понятная стратегия роста на основе данных</p>
-        <div class="srv-tags">
-          <span class="srv-tag">Бизнес-аналитика</span>
-          <span class="srv-tag">Аудит</span>
-          <span class="srv-tag">Воронка</span>
+        <div class="srv-img"><img src="/assets/services/analytics.jpg" alt="Аналитика и стратегия"></div>
+        <div class="srv-body">
+          <div class="srv-body-text">
+            <div class="srv-title">Аналитика и стратегия</div>
+            <p class="srv-desc">Сквозная аналитика и понятная стратегия роста на основе данных</p>
+          </div>
+          <span class="srv-more">Подробнее <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
         </div>
-        <div class="srv-foot"><span class="srv-link">Подробнее <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></div>
       </a>
-      </div>
     </div>
   </div>
 </section>
