@@ -194,7 +194,7 @@ button{font-family:inherit}
 .int-big-head{display:flex;align-items:center;gap:14px;padding:20px 24px}
 .int-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
 .int-icon-tg{background:#229ed9;color:#fff}
-.int-icon-md{background:#000;color:#fff;font-family:Georgia,serif;font-size:22px}
+.int-icon-dev{background:#0a0a0a;color:#fff}
 .int-big-name{font-size:14px;font-weight:600;color:var(--ink)}
 .int-big-desc{font-size:11px;color:var(--muted);margin-top:2px}
 .int-badge{font-size:11px;font-weight:500;padding:3px 9px;border-radius:20px;background:var(--paper-soft);color:var(--muted2);border:1px solid var(--line);white-space:nowrap}
@@ -986,10 +986,10 @@ function renderIntPage(){
       ok:!!(tg?.token&&tg?.channel),active:!!tg?.enabled,
     },
     {
-      icon:`<span style="font-family:Georgia,serif;font-size:22px;font-weight:700;line-height:1">M</span>`,
-      iconClass:'int-icon-md',name:'Medium',
-      detail:'Публикация статьи на Medium',
-      ok:!!(md?.token||md?.webhook),active:!!md?.enabled,
+      icon:`<span style="font-size:13px;font-weight:800;letter-spacing:-.03em;line-height:1">DEV</span>`,
+      iconClass:'int-icon-dev',name:'Dev.to',
+      detail:'dev.to/@montas',
+      ok:!!(cfg.devto?.token),active:!!cfg.devto?.enabled,
     },
   ];
   document.getElementById('int-page').innerHTML=PLATFORMS.map(p=>{
@@ -1100,6 +1100,25 @@ async function publishToTelegram(article,cfg){
   });
 }
 
+async function publishToDevTo(article,cfg){
+  const canonicalUrl=`https://montas.io/blog/viewer.html?id=${article.id}`;
+  const tags=(article.category?[article.category.toLowerCase().replace(/\s+/g,'')] : []).slice(0,4);
+  const r=await fetch('https://dev.to/api/articles',{
+    method:'POST',
+    headers:{'api-key':cfg.token,'Content-Type':'application/json'},
+    body:JSON.stringify({article:{
+      title:article.title,
+      body_markdown:article.content||'',
+      published:true,
+      canonical_url:canonicalUrl,
+      main_image:article.cover&&article.cover.startsWith('http')?article.cover:undefined,
+      tags,
+    }})
+  });
+  const d=await r.json();
+  return !!d.id;
+}
+
 async function publishToMedium(article,cfg){
   const url=`${location.origin}/blog/viewer.html?id=${article.id}`;
   const r=await fetch(cfg.webhook,{
@@ -1124,9 +1143,9 @@ async function publishIntegrations(article){
     const ok=await publishToTelegram(article,cfg.telegram).catch(()=>false);
     res.push('Telegram '+(ok?'✓':'✗'));
   }
-  if(cfg.medium?.enabled&&cfg.medium.webhook){
-    const ok=await publishToMedium(article,cfg.medium).catch(()=>false);
-    res.push('Medium '+(ok?'✓':'✗'));
+  if(cfg.devto?.enabled&&cfg.devto.token){
+    const ok=await publishToDevTo(article,cfg.devto).catch(()=>false);
+    res.push('Dev.to '+(ok?'✓':'✗'));
   }
   if(res.length) toast(res.join(' · '));
 }
