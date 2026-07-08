@@ -187,6 +187,27 @@ button{font-family:inherit}
 .set-inp{width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:13px;background:var(--paper-soft);color:var(--ink);outline:none;transition:border-color .15s}
 .set-inp:focus{border-color:var(--accent)}
 .set-note{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5;padding:10px 12px;background:var(--paper-soft);border-radius:6px}
+/* Integrations */
+.int-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:20px 24px;max-width:480px;margin-bottom:14px}
+.int-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.int-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0}
+.int-icon-tg{background:#229ed9;color:#fff}
+.int-icon-md{background:#000;color:#fff;font-family:Georgia,serif;font-size:20px;font-weight:700}
+.int-title{font-size:14px;font-weight:600;color:var(--ink)}
+.int-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.int-footer{display:flex;align-items:center;gap:10px;margin-top:16px}
+.int-status{font-size:11px;font-weight:500;display:flex;align-items:center;gap:5px}
+.int-status::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--muted2);flex-shrink:0}
+.int-status.ok{color:#16a34a}.int-status.ok::before{background:#16a34a}
+.int-status.err{color:#e53935}.int-status.err::before{background:#e53935}
+.int-help{font-size:10px;color:var(--accent);font-weight:500;margin-left:6px}
+/* Toggle switch */
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:var(--line);border-radius:20px;cursor:pointer;transition:background .2s}
+.toggle-track::before{content:'';position:absolute;width:16px;height:16px;left:2px;top:2px;background:#fff;border-radius:50%;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle input:checked~.toggle-track{background:var(--accent)}
+.toggle input:checked~.toggle-track::before{transform:translateX(16px)}
 
 /* ── TOAST ── */
 .toast{position:fixed;bottom:24px;right:24px;z-index:9999;background:var(--ink);color:#fff;font-size:13px;font-weight:500;padding:11px 18px;border-radius:9px;opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none;display:flex;align-items:center;gap:8px}
@@ -302,6 +323,63 @@ button{font-family:inherit}
           </div>
           <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
         </div>
+        <!-- Telegram -->
+        <div class="int-card">
+          <div class="int-header">
+            <div class="int-icon int-icon-tg">
+              <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.94 8.19-2.02 9.53c-.15.67-.54.84-1.09.52l-3-2.21-1.45 1.4c-.16.16-.3.3-.6.3l.21-3.03 5.5-4.97c.24-.21-.05-.33-.37-.12L7.08 14.4l-2.95-.92c-.64-.2-.65-.64.13-.95l11.54-4.45c.53-.19 1 .13.14.11z"/></svg>
+            </div>
+            <div>
+              <div class="int-title">Telegram</div>
+              <div class="int-sub">Пост в канал при публикации статьи</div>
+            </div>
+            <label class="toggle" style="margin-left:auto" title="Включить интеграцию">
+              <input type="checkbox" id="int-tg-enabled">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <div class="set-row">
+            <label class="set-lbl">Bot Token<a class="int-help" href="https://t.me/BotFather" target="_blank">→ получить у @BotFather</a></label>
+            <input class="set-inp" id="int-tg-token" type="password" placeholder="123456789:ABC-DEF1234...">
+          </div>
+          <div class="set-row" style="margin-bottom:0">
+            <label class="set-lbl">ID канала или @username</label>
+            <input class="set-inp" id="int-tg-channel" placeholder="@montas_blog или -1001234567890">
+          </div>
+          <div class="int-footer">
+            <button class="btn-secondary" id="int-tg-test" onclick="testTelegram()">Тест</button>
+            <span class="int-status" id="int-tg-status"></span>
+            <button class="btn-primary" onclick="saveIntegrations()" style="margin-left:auto">Сохранить</button>
+          </div>
+        </div>
+
+        <!-- Medium -->
+        <div class="int-card">
+          <div class="int-header">
+            <div class="int-icon int-icon-md">M</div>
+            <div>
+              <div class="int-title">Medium</div>
+              <div class="int-sub">Публикация через n8n или Make.com webhook</div>
+            </div>
+            <label class="toggle" style="margin-left:auto" title="Включить интеграцию">
+              <input type="checkbox" id="int-md-enabled">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+          <div class="set-row" style="margin-bottom:8px">
+            <label class="set-lbl">Webhook URL</label>
+            <input class="set-inp" id="int-md-webhook" type="url" placeholder="https://n8n.example.com/webhook/...">
+          </div>
+          <div class="set-note" style="margin-bottom:0;margin-top:0">
+            <b style="font-size:11px">Как подключить:</b> создайте workflow в <a href="https://n8n.io" target="_blank" style="color:var(--accent)">n8n.io</a> (бесплатно) — Webhook → Medium API с вашим токеном. Вставьте URL вебхука выше.
+          </div>
+          <div class="int-footer">
+            <button class="btn-secondary" id="int-md-test" onclick="testMedium()">Тест</button>
+            <span class="int-status" id="int-md-status"></span>
+            <button class="btn-primary" onclick="saveIntegrations()" style="margin-left:auto">Сохранить</button>
+          </div>
+        </div>
+
         <div class="set-card">
           <h3>Опасная зона</h3>
           <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5">Удалить все статьи из базы. Действие необратимо.</p>
@@ -532,6 +610,7 @@ function initApp(){
   renderStats();
   renderList();
   showView('articles');
+  initIntegrations();
   // strip inline font/background on paste
   document.getElementById('e-content').addEventListener('paste',e=>{
     e.preventDefault();
@@ -722,11 +801,13 @@ function saveArticle(){
     articles.unshift(art);
     document.getElementById('btn-del').style.display='';
   }
+  const wasPublished=existing?.status==='published';
   persist();
   updateSbCount();
   renderStats();
   setSaveInfo('Сохранено: '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'}));
   toast(art.status==='published'?'Опубликовано':'Черновик сохранён');
+  if(!wasPublished&&art.status==='published') publishIntegrations(art);
 }
 
 function setSaveInfo(t){document.getElementById('save-info').textContent=t}
@@ -922,6 +1003,130 @@ function toast(msg){
   t.classList.add('show');
   clearTimeout(window._toastTimer);
   window._toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── INTEGRATIONS ──
+const INT_KEY='montas_integrations';
+function loadIntegrations(){try{return JSON.parse(localStorage.getItem(INT_KEY)||'{}')}catch{return {}}}
+function saveIntegrationsToStorage(d){localStorage.setItem(INT_KEY,JSON.stringify(d))}
+
+function initIntegrations(){
+  const cfg=loadIntegrations();
+  if(cfg.telegram){
+    document.getElementById('int-tg-enabled').checked=!!cfg.telegram.enabled;
+    document.getElementById('int-tg-token').value=cfg.telegram.token||'';
+    document.getElementById('int-tg-channel').value=cfg.telegram.channel||'';
+    if(cfg.telegram.token) setIntStatus('tg','ok');
+  }
+  if(cfg.medium){
+    document.getElementById('int-md-enabled').checked=!!cfg.medium.enabled;
+    document.getElementById('int-md-webhook').value=cfg.medium.webhook||'';
+    if(cfg.medium.webhook) setIntStatus('md','ok');
+  }
+}
+
+function saveIntegrations(){
+  const data={
+    telegram:{
+      enabled:document.getElementById('int-tg-enabled').checked,
+      token:document.getElementById('int-tg-token').value.trim(),
+      channel:document.getElementById('int-tg-channel').value.trim(),
+    },
+    medium:{
+      enabled:document.getElementById('int-md-enabled').checked,
+      webhook:document.getElementById('int-md-webhook').value.trim(),
+    }
+  };
+  saveIntegrationsToStorage(data);
+  toast('Интеграции сохранены');
+}
+
+function setIntStatus(id,state){
+  const el=document.getElementById('int-'+id+'-status');
+  if(!el)return;
+  el.className='int-status'+(state?' '+state:'');
+  el.textContent=state==='ok'?'Подключено':state==='err'?'Ошибка':'';
+}
+
+async function testTelegram(){
+  const btn=document.getElementById('int-tg-test');
+  const token=document.getElementById('int-tg-token').value.trim();
+  const channel=document.getElementById('int-tg-channel').value.trim();
+  if(!token||!channel){toast('Заполните Token и Channel');return;}
+  btn.textContent='Проверка…';btn.disabled=true;
+  try{
+    const r=await fetch(`https://api.telegram.org/bot${token}/sendMessage`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:channel,text:'✅ *MONTAS Blog* — интеграция подключена',parse_mode:'Markdown'})
+    });
+    const d=await r.json();
+    if(d.ok){toast('Telegram: тест отправлен ✓');setIntStatus('tg','ok');}
+    else{toast('Ошибка: '+d.description);setIntStatus('tg','err');}
+  }catch(e){toast('Ошибка сети');setIntStatus('tg','err');}
+  btn.textContent='Тест';btn.disabled=false;
+}
+
+async function testMedium(){
+  const btn=document.getElementById('int-md-test');
+  const webhook=document.getElementById('int-md-webhook').value.trim();
+  if(!webhook){toast('Введите Webhook URL');return;}
+  btn.textContent='Проверка…';btn.disabled=true;
+  try{
+    const r=await fetch(webhook,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({_test:true,title:'MONTAS test ping'})});
+    if(r.ok){toast('Webhook ответил ✓');setIntStatus('md','ok');}
+    else{toast('Webhook вернул '+r.status);setIntStatus('md','err');}
+  }catch(e){toast('Ошибка: проверьте URL');setIntStatus('md','err');}
+  btn.textContent='Тест';btn.disabled=false;
+}
+
+async function publishToTelegram(article,cfg){
+  const url=`${location.origin}/blog/viewer.html?id=${article.id}`;
+  const excerpt=article.excerpt?'\n\n'+article.excerpt:'';
+  const text=`*${article.title}*${excerpt}\n\n[→ Читать на сайте](${url})`;
+  if(article.cover&&article.cover.startsWith('http')){
+    const r=await fetch(`https://api.telegram.org/bot${cfg.token}/sendPhoto`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cfg.channel,photo:article.cover,caption:text,parse_mode:'Markdown'})
+    });
+    return (await r.json()).ok;
+  }
+  const r=await fetch(`https://api.telegram.org/bot${cfg.token}/sendMessage`,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:cfg.channel,text,parse_mode:'Markdown'})
+  });
+  return (await r.json()).ok;
+}
+
+async function publishToMedium(article,cfg){
+  const url=`${location.origin}/blog/viewer.html?id=${article.id}`;
+  const r=await fetch(cfg.webhook,{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      title:article.title,
+      content:article.content+`<p><a href="${url}">Оригинал статьи на сайте MONTAS</a></p>`,
+      excerpt:article.excerpt||'',
+      cover:article.cover||'',
+      author:article.author||'',
+      category:article.category||'',
+      canonicalUrl:url,
+    })
+  });
+  return r.ok;
+}
+
+async function publishIntegrations(article){
+  const cfg=loadIntegrations();
+  const res=[];
+  if(cfg.telegram?.enabled&&cfg.telegram.token&&cfg.telegram.channel){
+    const ok=await publishToTelegram(article,cfg.telegram).catch(()=>false);
+    res.push('Telegram '+(ok?'✓':'✗'));
+  }
+  if(cfg.medium?.enabled&&cfg.medium.webhook){
+    const ok=await publishToMedium(article,cfg.medium).catch(()=>false);
+    res.push('Medium '+(ok?'✓':'✗'));
+  }
+  if(res.length) toast(res.join(' · '));
 }
 
 // ── BOOT ──
