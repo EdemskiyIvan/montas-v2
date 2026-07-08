@@ -1016,22 +1016,87 @@ function updateIntSbDot(){
   if(dot) dot.style.display=hasActive?'':'none';
 }
 
-async function publishToTelegram(article,cfg){
-  const url=`${location.origin}/blog/viewer.html?id=${article.id}`;
-  const excerpt=article.excerpt?'\n\n'+article.excerpt:'';
-  const text=`*${article.title}*${excerpt}\n\n[→ Читать на сайте](${url})`;
-  if(article.cover&&article.cover.startsWith('http')){
-    const r=await fetch(`https://api.telegram.org/bot${cfg.token}/sendPhoto`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:cfg.channel,photo:article.cover,caption:text,parse_mode:'Markdown'})
-    });
-    return (await r.json()).ok;
+function escTg(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+function htmlToTelegram(html){
+  const el=document.createElement('div');
+  el.innerHTML=html||'';
+  function walk(node){
+    if(node.nodeType===3) return escTg(node.textContent);
+    if(node.nodeType!==1) return '';
+    const tag=node.tagName.toLowerCase();
+    const kids=()=>[...node.childNodes].map(walk).join('');
+    switch(tag){
+      case 'h2': return '\n\n<b>'+kids()+'</b>\n';
+      case 'h3': return '\n<b>— '+kids()+'</b>\n';
+      case 'p': case 'div': return kids()+'\n\n';
+      case 'br': return '\n';
+      case 'b': case 'strong': return '<b>'+kids()+'</b>';
+      case 'i': case 'em': return '<i>'+kids()+'</i>';
+      case 'u': return '<u>'+kids()+'</u>';
+      case 's': case 'del': case 'strike': return '<s>'+kids()+'</s>';
+      case 'a':{const h=node.getAttribute('href');return h?'<a href="'+escTg(h)+'">'+kids()+'</a>':kids();}
+      case 'code': return '<code>'+kids()+'</code>';
+      case 'pre': return '<pre>'+kids()+'</pre>';
+      case 'blockquote': return '\n<blockquote>'+kids()+'</blockquote>\n';
+      case 'ul': return '\n'+[...node.querySelectorAll(':scope>li')].map(li=>'• '+li.textContent.trim()).join('\n')+'\n\n';
+      case 'ol': return '\n'+[...node.querySelectorAll(':scope>li')].map((li,i)=>(i+1)+'. '+li.textContent.trim()).join('\n')+'\n\n';
+      case 'li': case 'img': return '';
+      case 'hr': return '\n──────────\n\n';
+      default: return kids();
+    }
   }
-  const r=await fetch(`https://api.telegram.org/bot${cfg.token}/sendMessage`,{
+  return walk(el).replace(/\n{3,}/g,'\n\n').trim();
+}
+
+function tgSplit(text,max=4000){
+  const chunks=[];
+  while(text.length>max){
+    let cut=text.lastIndexOf('\n\n',max);
+    if(cut<max/2) cut=text.lastIndexOf('\n',max);
+    if(cut<max/2) cut=max;
+    chunks.push(text.slice(0,cut).trim());
+    text=text.slice(cut).trim();
+  }
+  if(text) chunks.push(text);
+  return chunks;
+}
+
+async function tgPost(endpoint,cfg,body){
+  const r=await fetch(`https://api.telegram.org/bot${cfg.token}/${endpoint}`,{
     method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({chat_id:cfg.channel,text,parse_mode:'Markdown'})
+    body:JSON.stringify({chat_id:cfg.channel,...body})
   });
   return (await r.json()).ok;
+}
+
+async function publishToTelegram(article,cfg){
+  const url=`${location.origin}/blog/viewer.html?id=${article.id}`;
+  const hasCover=article.cover&&article.cover.startsWith('http');
+
+  // 1. Cover photo
+  if(hasCover){
+    await tgPost('sendPhoto',cfg,{
+      photo:article.cover,
+      caption:`<b>${escTg(article.title)}</b>`,
+      parse_mode:'HTML',
+    });
+  }
+
+  // 2. Full article body
+  const body=htmlToTelegram(article.content);
+  const header=hasCover?'':(`<b>${escTg(article.title)}</b>\n\n`);
+  const footer=`\n\n— <a href="${url}">Читать на сайте MONTAS</a>`;
+  const full=header+body;
+  const chunks=tgSplit(full);
+
+  for(let i=0;i<chunks.length;i++){
+    const isLast=i===chunks.length-1;
+    const msg=chunks[i]+(isLast?footer:'');
+    await tgPost('sendMessage',cfg,{text:msg,parse_mode:'HTML',disable_web_page_preview:true});
+    if(!isLast) await new Promise(r=>setTimeout(r,300));
+  }
+  return true;
 }
 
 async function publishToMedium(article,cfg){
