@@ -131,6 +131,30 @@ button{font-family:inherit}
 .editor-area ul,.editor-area ol{padding-left:22px;margin-bottom:14px}
 .editor-area li{margin-bottom:5px}
 .editor-area a{color:var(--accent);text-decoration:underline}
+/* SEO Panel */
+.seo-panel{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:20px}
+.seo-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none;background:var(--paper)}
+.seo-header:hover{background:var(--paper-soft)}
+.seo-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted2)}
+.seo-badge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;background:var(--paper-soft);color:var(--muted2)}
+.seo-badge.good{background:#dcfce7;color:#16a34a}
+.seo-badge.ok{background:#fef9c3;color:#a16207}
+.seo-badge.bad{background:#fee2e2;color:#dc2626}
+.seo-body{padding:12px 14px;border-top:1px solid var(--line);background:var(--paper)}
+.seo-bar-wrap{height:4px;background:var(--paper-soft);border-radius:2px;margin-bottom:12px;overflow:hidden}
+.seo-bar{height:100%;border-radius:2px;transition:width .3s,background .3s}
+.seo-kw{width:100%;padding:7px 10px;border:1px solid var(--line);border-radius:6px;font-family:inherit;font-size:12px;background:var(--paper-soft);color:var(--ink);outline:none;margin-bottom:10px}
+.seo-kw:focus{border-color:var(--accent)}
+.seo-kw::placeholder{color:var(--muted2)}
+.seo-checks{display:flex;flex-direction:column;gap:5px}
+.seo-item{display:flex;align-items:flex-start;gap:8px;font-size:11px;line-height:1.4}
+.seo-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.seo-dot.pass{background:#16a34a}
+.seo-dot.warn{background:#d97706}
+.seo-dot.fail{background:#dc2626}
+.seo-dot.skip{background:var(--muted2)}
+.seo-item-text{color:var(--muted)}
+.seo-item-text b{color:var(--ink);font-weight:500}
 /* Sidebar fields */
 .er-sec{margin-bottom:20px}
 .er-lbl{display:block;font-size:10px;font-weight:500;color:var(--muted2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:6px}
@@ -351,7 +375,7 @@ button{font-family:inherit}
       <div class="editor-shell">
         <!-- Left: content -->
         <div class="editor-left">
-          <textarea class="e-title" id="e-title" rows="1" placeholder="Заголовок статьи" oninput="autoHeight(this);autoSlug()" spellcheck="true"></textarea>
+          <textarea class="e-title" id="e-title" rows="1" placeholder="Заголовок статьи" oninput="autoHeight(this);autoSlug();runSeoCheck()" spellcheck="true"></textarea>
           <div class="e-slug-row">
             <span class="e-slug-pre">montas.agency/blog/</span>
             <input class="e-slug" id="e-slug" type="text" placeholder="slug-url" spellcheck="false">
@@ -370,7 +394,7 @@ button{font-family:inherit}
             <button class="tb-btn" title="Ссылка" onclick="fmt('link')">🔗</button>
             <button class="tb-btn" title="Убрать форматирование" onclick="fmt('clear')" style="margin-left:auto">✕</button>
           </div>
-          <div class="editor-area" id="e-content" contenteditable="true" data-placeholder="Начните писать статью..." spellcheck="true"></div>
+          <div class="editor-area" id="e-content" contenteditable="true" data-placeholder="Начните писать статью..." spellcheck="true" oninput="runSeoCheck()"></div>
         </div>
         <!-- Right: metadata -->
         <div class="editor-right">
@@ -402,7 +426,7 @@ button{font-family:inherit}
           </div>
           <div class="er-sec">
             <label class="er-lbl" for="e-excerpt">Описание</label>
-            <textarea class="er-ta" id="e-excerpt" placeholder="Краткое описание для превью и SEO" rows="3"></textarea>
+            <textarea class="er-ta" id="e-excerpt" placeholder="Краткое описание для превью и SEO" rows="3" oninput="runSeoCheck()"></textarea>
           </div>
           <div class="er-sec">
             <span class="er-lbl">Обложка</span>
@@ -442,6 +466,19 @@ button{font-family:inherit}
           <div class="er-sec">
             <label class="er-lbl" for="e-date">Дата публикации</label>
             <input class="er-inp" id="e-date" type="date">
+          </div>
+
+          <!-- SEO Panel -->
+          <div class="seo-panel">
+            <div class="seo-header" onclick="toggleSeoPanel()">
+              <span class="seo-label">SEO</span>
+              <span class="seo-badge" id="seo-badge">—</span>
+            </div>
+            <div class="seo-body" id="seo-body" style="display:none">
+              <div class="seo-bar-wrap"><div class="seo-bar" id="seo-bar" style="width:0%"></div></div>
+              <input class="seo-kw" id="seo-kw" type="text" placeholder="Ключевое слово (необязательно)" oninput="runSeoCheck()">
+              <div class="seo-checks" id="seo-checks"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -724,7 +761,7 @@ function editArticle(id){
   renderTags();
   setSaveInfo('Последнее изменение: '+fmtDate(new Date(a.updatedAt).toISOString().slice(0,10)));
   showView('editor');
-  requestAnimationFrame(()=>autoHeight(document.getElementById('e-title')));
+  requestAnimationFrame(()=>{autoHeight(document.getElementById('e-title'));runSeoCheck();});
 }
 
 function setStatus(s){
@@ -964,6 +1001,112 @@ function toast(msg){
   t.classList.add('show');
   clearTimeout(window._toastTimer);
   window._toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+// ── SEO CHECKER ──
+let seoOpen=false;
+function toggleSeoPanel(){
+  seoOpen=!seoOpen;
+  document.getElementById('seo-body').style.display=seoOpen?'block':'none';
+  if(seoOpen) runSeoCheck();
+}
+
+function countWords(html){
+  return (html||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().split(' ').filter(Boolean).length;
+}
+
+function runSeoCheck(){
+  const title=document.getElementById('e-title').value.trim();
+  const excerpt=document.getElementById('e-excerpt').value.trim();
+  const content=document.getElementById('e-content').innerHTML||'';
+  const kw=(document.getElementById('seo-kw').value||'').trim().toLowerCase();
+  const hasCover=!!(currentCoverData);
+  const hasAuthor=!!(document.getElementById('e-author').value);
+  const hasCategory=!!(document.getElementById('e-category').value);
+
+  const words=countWords(content);
+  const titleLen=title.length;
+  const excerptLen=excerpt.length;
+  const hasH2=/<h2/i.test(content);
+  const hasH3=/<h3/i.test(content);
+  const kwInTitle=kw?title.toLowerCase().includes(kw):null;
+  const kwInContent=kw?(content.replace(/<[^>]*>/g,' ').toLowerCase().includes(kw)):null;
+
+  const checks=[
+    {
+      label:'Заголовок',
+      detail: titleLen===0?'не заполнен':`${titleLen} симв. (оптимально 40–70)`,
+      state: titleLen>=40&&titleLen<=70?'pass':titleLen>=20&&titleLen<=80?'warn':'fail',
+    },
+    {
+      label:'Описание (meta)',
+      detail: excerptLen===0?'не заполнено':`${excerptLen} симв. (оптимально 120–160)`,
+      state: excerptLen>=120&&excerptLen<=160?'pass':excerptLen>=80&&excerptLen<=200?'warn':'fail',
+    },
+    {
+      label:'Объём текста',
+      detail:`${words} слов${words>=600?' ✓':words>=300?' (лучше 600+)':' (минимум 300)'}`,
+      state: words>=600?'pass':words>=300?'warn':'fail',
+    },
+    {
+      label:'Заголовки H2',
+      detail: hasH2?'есть':'не найдено ни одного H2',
+      state: hasH2?'pass':'fail',
+    },
+    {
+      label:'Подзаголовки H3',
+      detail: hasH3?'есть':'нет H3 (необязательно)',
+      state: hasH3?'pass':'warn',
+    },
+    {
+      label:'Обложка',
+      detail: hasCover?'установлена':'не задана',
+      state: hasCover?'pass':'fail',
+    },
+    {
+      label:'Автор',
+      detail: hasAuthor?document.getElementById('e-author').value:'не выбран',
+      state: hasAuthor?'pass':'warn',
+    },
+    {
+      label:'Категория',
+      detail: hasCategory?document.getElementById('e-category').value:'не выбрана',
+      state: hasCategory?'pass':'warn',
+    },
+    ...(kw?[
+      {
+        label:'Ключевое слово в заголовке',
+        detail: kwInTitle?`«${kw}» найдено`:`«${kw}» не найдено`,
+        state: kwInTitle?'pass':'fail',
+      },
+      {
+        label:'Ключевое слово в тексте',
+        detail: kwInContent?`«${kw}» найдено`:`«${kw}» не встречается`,
+        state: kwInContent?'pass':'warn',
+      },
+    ]:[]),
+  ];
+
+  const total=checks.length;
+  const passed=checks.filter(c=>c.state==='pass').length;
+  const pct=Math.round(passed/total*100);
+
+  // Update badge
+  const badge=document.getElementById('seo-badge');
+  badge.textContent=`${passed}/${total}`;
+  badge.className='seo-badge '+(pct>=80?'good':pct>=50?'ok':'bad');
+
+  // Update bar
+  const bar=document.getElementById('seo-bar');
+  bar.style.width=pct+'%';
+  bar.style.background=pct>=80?'#16a34a':pct>=50?'#d97706':'#dc2626';
+
+  // Update checklist
+  document.getElementById('seo-checks').innerHTML=checks.map(c=>`
+    <div class="seo-item">
+      <span class="seo-dot ${c.state}"></span>
+      <span class="seo-item-text"><b>${c.label}</b> — ${c.detail}</span>
+    </div>`).join('');
 }
 
 // ── INTEGRATIONS ──
