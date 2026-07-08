@@ -67,12 +67,13 @@ img{display:block;max-width:100%}
 
 /* FILTER */
 .blog-filter{
-  padding:clamp(20px,2.5vw,32px) clamp(20px,4vw,64px);
+  padding:clamp(16px,2vw,24px) clamp(20px,4vw,64px);
   border-bottom:1px solid var(--line);
   background:var(--paper);
   position:sticky;top:72px;z-index:50;
 }
-.blog-filter-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.blog-filter-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.filter-tabs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1}
 .filter-tab{
   font-family:'SF Mono',ui-monospace,monospace;
   font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;
@@ -82,6 +83,25 @@ img{display:block;max-width:100%}
 }
 .filter-tab:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
 .filter-tab.active{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.search-wrap{position:relative;flex-shrink:0}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--muted2);pointer-events:none}
+.search-inp{
+  font-family:'Google Sans','Plus Jakarta Sans',system-ui,sans-serif;
+  font-size:13px;color:var(--ink);
+  background:var(--paper-soft);border:1px solid var(--line);border-radius:8px;
+  padding:8px 12px 8px 34px;width:220px;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.search-inp::placeholder{color:var(--muted2)}
+.search-inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,92,255,.1)}
+.search-clear{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;border-radius:50%;background:var(--muted2);
+  display:none;align-items:center;justify-content:center;cursor:pointer;
+  color:#fff;font-size:10px;line-height:1;border:none;padding:0;
+}
+.search-clear.visible{display:flex}
+@media(max-width:600px){.search-inp{width:100%}.blog-filter-inner{flex-direction:column;align-items:stretch}.search-wrap{width:100%}}
 
 /* GRID */
 .blog-main{padding:clamp(40px,5vw,64px) clamp(20px,4vw,64px) clamp(60px,8vw,100px)}
@@ -189,8 +209,15 @@ img{display:block;max-width:100%}
   </div>
 
   <div class="blog-filter" id="blog-filter">
-    <div class="blog-filter-inner" id="filter-tabs">
-      <button class="filter-tab active" data-cat="">Все статьи</button>
+    <div class="blog-filter-inner">
+      <div class="filter-tabs" id="filter-tabs">
+        <button class="filter-tab active" data-cat="">Все статьи</button>
+      </div>
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+        <input class="search-inp" id="search-inp" type="text" placeholder="Поиск по статьям…" autocomplete="off">
+        <button class="search-clear" id="search-clear" aria-label="Очистить">✕</button>
+      </div>
     </div>
   </div>
 
@@ -295,17 +322,32 @@ function emptyHtml(){
 
 let allArticles=[];
 let activeCat='';
+let searchQuery='';
+
+function countLabel(n){return n===1?'статья':n>=2&&n<=4?'статьи':'статей';}
 
 function render(){
   const grid=document.getElementById('blog-grid');
   const countEl=document.getElementById('blog-count');
-  const filtered=activeCat?allArticles.filter(a=>a.category===activeCat):allArticles;
+  const q=searchQuery.toLowerCase().trim();
+  const filtered=allArticles.filter(a=>{
+    if(activeCat&&a.category!==activeCat)return false;
+    if(q){
+      const hay=(a.title+' '+(a.excerpt||'')+' '+(a.category||'')).toLowerCase();
+      return hay.includes(q);
+    }
+    return true;
+  });
   if(!filtered.length){
-    grid.innerHTML=emptyHtml();
+    const msg=q?`Ничего не найдено по запросу «${esc(q)}»`:'Статей пока нет';
+    const sub=q?'Попробуйте другое слово или сбросьте фильтр':'Опубликованные статьи появятся здесь автоматически';
+    grid.innerHTML=`<div class="blog-empty">
+      <div class="blog-empty-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>
+      <h3>${msg}</h3><p>${sub}</p></div>`;
     countEl.textContent='';
   } else {
     grid.innerHTML=filtered.map(cardHtml).join('');
-    countEl.innerHTML=`<strong>${filtered.length}</strong> ${filtered.length===1?'статья':filtered.length<5?'статьи':'статей'}`;
+    countEl.innerHTML=`<strong>${filtered.length}</strong> ${countLabel(filtered.length)}`;
   }
 }
 
@@ -328,6 +370,21 @@ function buildFilters(articles){
     render();
   });
 }
+
+// Search
+const searchInp=document.getElementById('search-inp');
+const searchClear=document.getElementById('search-clear');
+searchInp.addEventListener('input',()=>{
+  searchQuery=searchInp.value;
+  searchClear.classList.toggle('visible',searchQuery.length>0);
+  render();
+});
+searchClear.addEventListener('click',()=>{
+  searchInp.value='';searchQuery='';
+  searchClear.classList.remove('visible');
+  searchInp.focus();
+  render();
+});
 
 // Init
 allArticles=getArticles().filter(a=>a.status==='published');
