@@ -1100,12 +1100,12 @@ async function publishToTelegram(article,cfg){
   });
 }
 
-async function publishToDevTo(article,cfg){
+async function publishToDevTo(article){
   const canonicalUrl=`https://montas.io/blog/viewer.html?id=${article.id}`;
-  const tags=(article.category?[article.category.toLowerCase().replace(/\s+/g,'')] : []).slice(0,4);
-  const r=await fetch('https://dev.to/api/articles',{
+  const tags=(article.category?[article.category.toLowerCase().replace(/\s+/g,'')]:[]).slice(0,4);
+  const r=await fetch('/api/devto',{
     method:'POST',
-    headers:{'api-key':cfg.token,'Content-Type':'application/json'},
+    headers:{'Content-Type':'application/json'},
     body:JSON.stringify({article:{
       title:article.title,
       body_markdown:article.content||'',
@@ -1144,7 +1144,7 @@ async function publishIntegrations(article){
     res.push('Telegram '+(ok?'✓':'✗'));
   }
   if(cfg.devto?.enabled&&cfg.devto.token){
-    const ok=await publishToDevTo(article,cfg.devto).catch(()=>false);
+    const ok=await publishToDevTo(article).catch(()=>false);
     res.push('Dev.to '+(ok?'✓':'✗'));
   }
   if(res.length) toast(res.join(' · '));
