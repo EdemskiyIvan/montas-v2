@@ -1071,33 +1071,33 @@ async function tgPost(endpoint,cfg,body){
 }
 
 async function publishToTelegram(article,cfg){
-  const siteUrl='https://montas.io/blog';
-  const articleUrl=`${siteUrl}/viewer.html?id=${article.id}`;
+  const articleUrl=`https://montas.io/blog/viewer.html?id=${article.id}`;
   const hasCover=article.cover&&article.cover.startsWith('http');
-  const LIMIT=3800;
+  const footer=`\n\n📎 <a href="${articleUrl}">Читайте до конца на сайте montas.io/blog</a>`;
 
-  // Cover — только если настоящий URL (не base64)
+  const body=htmlToTelegram(article.content);
+  const header=`<b>${escTg(article.title)}</b>\n\n`;
+
   if(hasCover){
-    await tgPost('sendPhoto',cfg,{
+    // sendPhoto: caption limit 1024 chars
+    const CAP_LIMIT=900;
+    const capBody=body.length>CAP_LIMIT?body.slice(0,CAP_LIMIT).replace(/\s+$/,'')+'...':body;
+    return tgPost('sendPhoto',cfg,{
       photo:article.cover,
-      caption:`<b>${escTg(article.title)}</b>`,
+      caption:header+capBody+footer,
       parse_mode:'HTML',
     });
   }
 
-  // Тело статьи — обрезаем до LIMIT символов
-  let body=htmlToTelegram(article.content);
-  const header=hasCover?'':(`<b>${escTg(article.title)}</b>\n\n`);
-  const footer=`\n\n📎 <a href="${articleUrl}">Читайте до конца на сайте montas.io/blog</a>`;
+  // Без обложки — текстовое сообщение, лимит 4096
+  const LIMIT=3800;
   const full=header+body;
   const truncated=full.length>LIMIT?full.slice(0,LIMIT).replace(/\s+$/,'')+'...':full;
-
-  await tgPost('sendMessage',cfg,{
+  return tgPost('sendMessage',cfg,{
     text:truncated+footer,
     parse_mode:'HTML',
     disable_web_page_preview:false,
   });
-  return true;
 }
 
 async function publishToMedium(article,cfg){
