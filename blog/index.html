@@ -51,19 +51,48 @@ img{display:block;max-width:100%}
 
 /* HERO */
 .blog-hero{
-  background:var(--paper-soft);
+  background:var(--paper);
   padding:clamp(48px,6vw,80px) clamp(20px,4vw,64px) clamp(40px,5vw,64px);
   border-bottom:1px solid var(--line);
 }
-.blog-hero-inner{max-width:1280px;margin:0 auto}
-.blog-hero-eyebrow{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:'SF Mono',ui-monospace,monospace;
-  font-size:11px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;
-  color:var(--accent);margin-bottom:18px;
+.blog-hero-inner{
+  max-width:1280px;margin:0 auto;
+  display:grid;grid-template-columns:1fr auto;align-items:end;gap:clamp(32px,5vw,80px);
 }
-.blog-hero h1{font-size:clamp(32px,5vw,60px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin-bottom:14px}
-.blog-hero-sub{font-size:clamp(14px,1.3vw,17px);color:var(--muted);line-height:1.65;max-width:520px}
+.blog-hero-label{
+  display:inline-flex;align-items:center;gap:6px;
+  border:1px solid var(--line);border-radius:999px;
+  background:var(--paper-soft);padding:5px 14px 5px 10px;
+  font-family:'SF Mono',ui-monospace,monospace;
+  font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:22px;width:fit-content;
+}
+.blog-hero-label svg{color:var(--accent)}
+.blog-hero h1{
+  font-size:clamp(30px,4.5vw,56px);font-weight:700;
+  letter-spacing:-.03em;line-height:1.06;margin-bottom:16px;
+}
+.blog-hero h1 em{font-style:normal;color:var(--accent)}
+.blog-hero-sub{font-size:clamp(14px,1.2vw,16px);color:var(--muted);line-height:1.7;max-width:480px}
+.blog-hero-stats{
+  display:flex;flex-direction:column;gap:12px;flex-shrink:0;
+}
+.blog-stat{
+  background:var(--paper-soft);border:1px solid var(--line);border-radius:12px;
+  padding:18px 24px;min-width:160px;
+}
+.blog-stat-num{
+  font-size:clamp(28px,3vw,38px);font-weight:700;letter-spacing:-.03em;
+  color:var(--ink);line-height:1;margin-bottom:4px;
+}
+.blog-stat-num span{font-size:.55em;font-weight:600;color:var(--accent)}
+.blog-stat-label{font-size:12px;color:var(--muted);line-height:1.4}
+@media(max-width:860px){
+  .blog-hero-inner{grid-template-columns:1fr}
+  .blog-hero-stats{flex-direction:row}
+  .blog-stat{min-width:120px;padding:14px 18px}
+}
+@media(max-width:500px){.blog-hero-stats{display:none}}
 
 /* FILTER */
 .blog-filter{
@@ -199,12 +228,24 @@ img{display:block;max-width:100%}
 
   <div class="blog-hero">
     <div class="blog-hero-inner">
-      <div class="blog-hero-eyebrow">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-        Блог
+      <div>
+        <div class="blog-hero-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          Блог MONTAS
+        </div>
+        <h1>Маркетинг, дизайн<br>и <em>рост бизнеса</em></h1>
+        <p class="blog-hero-sub">Делимся опытом, разбираем кейсы и рассказываем о том, что реально работает для малого и среднего бизнеса</p>
       </div>
-      <h1>Статьи о маркетинге,<br>дизайне и росте бизнеса</h1>
-      <p class="blog-hero-sub">Делимся опытом, разбираем кейсы и рассказываем о том, что работает для малого и среднего бизнеса</p>
+      <div class="blog-hero-stats">
+        <div class="blog-stat">
+          <div class="blog-stat-num" id="stat-articles">—</div>
+          <div class="blog-stat-label">опубликованных<br>статей</div>
+        </div>
+        <div class="blog-stat">
+          <div class="blog-stat-num" id="stat-cats">—</div>
+          <div class="blog-stat-label">тематических<br>категорий</div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -394,6 +435,15 @@ allArticles=getArticles()
     const db=b.date||b.createdAt||0;
     return da>db?-1:da<db?1:0;
   });
+
+// Fill hero stats
+const statArt=document.getElementById('stat-articles');
+const statCats=document.getElementById('stat-cats');
+if(statArt)statArt.textContent=allArticles.length;
+if(statCats){
+  const cats=new Set(allArticles.map(a=>a.category).filter(Boolean));
+  statCats.textContent=cats.size;
+}
 buildFilters(allArticles);
 render();
 
