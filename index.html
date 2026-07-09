@@ -5,16 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MONTAS — Маркетинговое агентство полного цикла</title>
 <meta name="description" content="AI, разработка, дизайн, маркетинг, аналитика и SMM под одной крышей. Работаем с малым и средним бизнесом.">
+<style>@font-face{font-family:'Craftwork Grotesk';src:url('/assets/fonts/CraftworkGrotesk-Bold.ttf') format('truetype');font-weight:700;font-display:swap}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ─── TOKENS ─── */
 :root {
   --ink:          #0e0f0c;
   --paper:        #fafafa;
-  --paper-soft:   #f1f0ec;
+  --paper-soft:   #f0f0f2;
   --line:         rgba(14,15,12,.12);
   --line-soft:    rgba(14,15,12,.06);
   --accent:       #1a5cff;
@@ -88,7 +89,7 @@ img{display:block;max-width:100%}
 /* ─── HERO ─── */
 .hero{
   min-height:100svh;display:flex;align-items:center;
-  padding-top:72px;background:var(--paper);
+  padding-top:72px;background:#fff;
 }
 .hero-inner{
   max-width:1280px;margin:0 auto;width:100%;
@@ -169,7 +170,7 @@ img{display:block;max-width:100%}
 @keyframes htab-bg-fill{from{background-size:0% 100%}to{background-size:100% 100%}}
 
 /* ─── LOGOS ─── */
-.clients{padding:clamp(48px,6vw,72px) clamp(20px,3vw,40px);background:var(--paper)}
+.clients{padding:clamp(48px,6vw,72px) clamp(20px,3vw,40px);background:#fff}
 .clients-inner{max-width:1280px;margin:0 auto}
 .clients-label{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted2);margin-bottom:20px}
 .clients-logos{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}
@@ -180,7 +181,7 @@ img{display:block;max-width:100%}
 
 /* ─── SECTION BASE ─── */
 .sec{padding:clamp(64px,8vw,96px) clamp(20px,3vw,40px)}
-.sec-soft{background:var(--paper-soft)}
+.sec-soft{background:#fff}
 .sec-cta-bg{background:url('/assets/cta-bg.jpg') center/cover no-repeat;position:relative}
 .sec-cta-bg::before{content:'';position:absolute;inset:0;background:rgba(5,18,40,.62);pointer-events:none}
 .sec-ink{background:var(--ink)}
@@ -207,7 +208,7 @@ img{display:block;max-width:100%}
 
 /* ─── SERVICES ─── */
 /* Services new layout */
-.srv-section-bg{background:linear-gradient(160deg,#e8f0ff 0%,#f0f4ff 40%,#e4eeff 100%)}
+.srv-section-bg{background:#f0f4ff}
 .srv-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .srv-card{
   background:#fff;border-radius:16px;
@@ -217,15 +218,15 @@ img{display:block;max-width:100%}
   transition:transform .2s ease,box-shadow .2s ease;
   min-height:200px;
 }
-.srv-card:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(26,92,255,.1)}
-.srv-img{width:190px;min-width:190px;overflow:hidden;flex-shrink:0;background:var(--paper-soft)}
-.srv-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.srv-card:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(4,197,236,.12)}
+.srv-img{width:220px;min-width:220px;overflow:hidden;flex-shrink:0;background:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
+.srv-img img{width:100%;height:100%;object-fit:contain;transition:transform .4s ease}
 .srv-card:hover .srv-img img{transform:scale(1.06)}
-.srv-body{padding:clamp(22px,2.2vw,32px);flex:1;display:flex;flex-direction:column;justify-content:space-between}
-.srv-body-text{flex:1}
-.srv-title{font-size:clamp(20px,1.9vw,26px);font-weight:700;letter-spacing:-.025em;color:var(--ink);margin-bottom:10px;line-height:1.2}
+.srv-body{padding:clamp(22px,2.2vw,32px);flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px}
+.srv-body-text{}
+.srv-title{font-size:28px;font-weight:700;font-family:'Google Sans',sans-serif;letter-spacing:-.025em;color:var(--ink);margin-bottom:6px;line-height:1.2}
 .srv-desc{font-size:clamp(13px,1.1vw,14px);color:var(--muted);line-height:1.65}
-.srv-more{display:inline-flex;align-items:center;gap:6px;margin-top:20px;font-size:13px;font-weight:600;color:var(--accent);transition:gap .15s}
+.srv-more{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--accent);transition:gap .15s}
 .srv-card:hover .srv-more{gap:10px}
 @media(max-width:900px){.srv-img{width:140px;min-width:140px}}
 @media(max-width:600px){.srv-grid{grid-template-columns:1fr}.srv-img{width:110px;min-width:110px}}
@@ -633,7 +634,7 @@ img{display:block;max-width:100%}
     </div>
     <div class="srv-grid">
       <a class="srv-card" href="/services/marketing.html">
-        <div class="srv-img"><img src="/assets/services/marketing.png" alt="Маркетинг"></div>
+        <div class="srv-img"><img src="/assets/services/marketing.png" alt="Маркетинг" style="transform:scale(1.15)"></div>
         <div class="srv-body">
           <div class="srv-body-text">
             <div class="srv-title">Маркетинг</div>
@@ -643,7 +644,7 @@ img{display:block;max-width:100%}
         </div>
       </a>
       <a class="srv-card" href="/services/smm.html">
-        <div class="srv-img"><img src="/assets/services/smm.png" alt="SMM"></div>
+        <div class="srv-img"><img src="/assets/services/smm.png" alt="SMM" style="transform:scale(1.15)"></div>
         <div class="srv-body">
           <div class="srv-body-text">
             <div class="srv-title">SMM</div>
@@ -653,7 +654,7 @@ img{display:block;max-width:100%}
         </div>
       </a>
       <a class="srv-card" href="/services/design.html">
-        <div class="srv-img"><img src="/assets/services/design.jpg" alt="Дизайн"></div>
+        <div class="srv-img"><img src="/assets/services/design.png" alt="Дизайн"></div>
         <div class="srv-body">
           <div class="srv-body-text">
             <div class="srv-title">Дизайн</div>
@@ -673,7 +674,7 @@ img{display:block;max-width:100%}
         </div>
       </a>
       <a class="srv-card" href="/services/ai.html">
-        <div class="srv-img"><img src="/assets/services/ai.jpg" alt="AI и автоматизация"></div>
+        <div class="srv-img"><img src="/assets/services/ai.png" alt="AI и автоматизация" style="transform:scale(1.15)"></div>
         <div class="srv-body">
           <div class="srv-body-text">
             <div class="srv-title">AI и автоматизация</div>
@@ -683,7 +684,7 @@ img{display:block;max-width:100%}
         </div>
       </a>
       <a class="srv-card" href="/services/analytics.html">
-        <div class="srv-img"><img src="/assets/services/analytics.jpg" alt="Аналитика и стратегия"></div>
+        <div class="srv-img"><img src="/assets/services/analytics.png" alt="Аналитика и стратегия" style="transform:scale(1.15)"></div>
         <div class="srv-body">
           <div class="srv-body-text">
             <div class="srv-title">Аналитика и стратегия</div>
@@ -932,7 +933,7 @@ img{display:block;max-width:100%}
 </section>
 
 <!-- BLOG -->
-<section class="sec" id="blog">
+<section class="sec" id="blog" style="background:#fff">
   <div class="sec-inner">
     <div class="sec-top">
       <div>
