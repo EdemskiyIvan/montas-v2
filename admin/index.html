@@ -295,23 +295,30 @@ button{font-family:inherit}
     <div class="sb-logo"><div class="sb-sq"></div>MONTAS <span class="sb-badge">CMS</span></div>
     <div class="sb-nav">
       <div class="sb-section">Контент</div>
-      <button class="sb-link active" data-view="articles" onclick="showView('articles')">
+      <button class="sb-link active" data-view="articles" onclick="showView('articles');toggleArticlesGroup(true)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         Статьи
         <span class="sb-count" id="sb-count">0</span>
       </button>
-      <button class="sb-link" data-view="cases" onclick="showView('cases')">
+      <div id="articles-group" style="overflow:hidden;max-height:0;transition:max-height .2s ease">
+        <button class="sb-link" data-view="integrations" onclick="showView('integrations')" style="padding-left:28px;font-size:12px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Интеграции
+          <span class="int-sb-badge" id="int-sb-badge" style="display:none"></span>
+        </button>
+      </div>
+      <button class="sb-link" data-view="cases" onclick="showView('cases');toggleArticlesGroup(false)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
         Кейсы
         <span class="sb-count" id="sb-count-cases">0</span>
       </button>
-      <div class="sb-section" style="margin-top:12px">Прочее</div>
-      <button class="sb-link" data-view="integrations" onclick="showView('integrations')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-        Интеграции
-        <span class="int-sb-badge" id="int-sb-badge" style="display:none"></span>
+      <div class="sb-section" style="margin-top:12px">Инструменты</div>
+      <button class="sb-link" data-view="codex-seo" onclick="showView('codex-seo');toggleArticlesGroup(false)" style="opacity:.5;cursor:default">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Codex SEO
+        <span style="font-size:9px;font-family:ui-monospace,monospace;background:rgba(255,255,255,.08);color:rgba(255,255,255,.3);padding:1px 5px;border-radius:3px;margin-left:auto">скоро</span>
       </button>
-      <button class="sb-link" data-view="settings" onclick="showView('settings')">
+      <button class="sb-link" data-view="settings" onclick="showView('settings');toggleArticlesGroup(false)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
         Настройки
       </button>
@@ -371,6 +378,13 @@ button{font-family:inherit}
         <div class="int-page" id="int-page"></div>
       </div>
 
+      <div class="view" id="view-codex-seo">
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 0;gap:16px;color:var(--muted)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="width:48px;height:48px;opacity:.25"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <div style="font-size:18px;font-weight:600;color:var(--ink);opacity:.4">Codex SEO</div>
+          <div style="font-size:13px;text-align:center;max-width:320px;line-height:1.6">Инструмент для SEO-анализа статей и страниц сайта.<br>Скоро появится здесь.</div>
+        </div>
+      </div>
       <div class="view" id="view-settings">
         <div class="set-card">
           <h3>Безопасность</h3>
@@ -771,6 +785,11 @@ function updateSbCount(){
   document.getElementById('sb-count').textContent=articles.length;
 }
 
+function toggleArticlesGroup(open){
+  const g=document.getElementById('articles-group');
+  g.style.maxHeight=open?'80px':'0';
+}
+
 // ── VIEWS ──
 function showView(name){
   // deactivate all
@@ -778,7 +797,7 @@ function showView(name){
   document.querySelectorAll('.view-full').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
 
-  const titles={articles:'Статьи',editor:editingId?'Редактировать статью':'Новая статья',cases:'Кейсы','case-editor':editingCaseId?'Редактировать кейс':'Новый кейс',settings:'Настройки',integrations:'Интеграции'};
+  const titles={articles:'Статьи',editor:editingId?'Редактировать статью':'Новая статья',cases:'Кейсы','case-editor':editingCaseId?'Редактировать кейс':'Новый кейс',settings:'Настройки',integrations:'Интеграции','codex-seo':'Codex SEO'};
   document.getElementById('mh-title').textContent=titles[name]||'';
 
   const acts=document.getElementById('mh-actions');
@@ -802,6 +821,8 @@ function showView(name){
     acts.innerHTML='<button class="btn-secondary" onclick="showView(\'cases\')">← К кейсам</button>';
   } else if(name==='settings'){
     document.getElementById('view-settings').classList.add('active');
+  } else if(name==='codex-seo'){
+    document.getElementById('view-codex-seo').classList.add('active');
   } else if(name==='integrations'){
     document.getElementById('view-integrations').classList.add('active');
     renderIntPage();
