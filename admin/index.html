@@ -306,24 +306,23 @@ button{font-family:inherit}
           Интеграции
           <span class="int-sb-badge" id="int-sb-badge" style="display:none"></span>
         </button>
+        <button class="sb-link" data-view="codex-seo" onclick="showView('codex-seo')" style="padding-left:28px;font-size:12px;opacity:.5;cursor:default">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Codex SEO
+          <span style="font-size:9px;font-family:ui-monospace,monospace;background:rgba(255,255,255,.08);color:rgba(255,255,255,.3);padding:1px 5px;border-radius:3px;margin-left:auto">скоро</span>
+        </button>
       </div>
       <button class="sb-link" data-view="cases" onclick="showView('cases');toggleArticlesGroup(false)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
         Кейсы
         <span class="sb-count" id="sb-count-cases">0</span>
       </button>
-      <div class="sb-section" style="margin-top:12px">Инструменты</div>
-      <button class="sb-link" data-view="codex-seo" onclick="showView('codex-seo');toggleArticlesGroup(false)" style="opacity:.5;cursor:default">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-        Codex SEO
-        <span style="font-size:9px;font-family:ui-monospace,monospace;background:rgba(255,255,255,.08);color:rgba(255,255,255,.3);padding:1px 5px;border-radius:3px;margin-left:auto">скоро</span>
-      </button>
-      <button class="sb-link" data-view="settings" onclick="showView('settings');toggleArticlesGroup(false)">
+    </div>
+    <div class="sb-footer">
+      <button class="sb-small" data-view="settings" onclick="showView('settings');toggleArticlesGroup(false)">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
         Настройки
       </button>
-    </div>
-    <div class="sb-footer">
       <a href="/" target="_blank" class="sb-small">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
         Открыть сайт
@@ -787,7 +786,7 @@ function updateSbCount(){
 
 function toggleArticlesGroup(open){
   const g=document.getElementById('articles-group');
-  g.style.maxHeight=open?'80px':'0';
+  g.style.maxHeight=open?'120px':'0';
 }
 
 // ── VIEWS ──
