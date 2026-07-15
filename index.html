@@ -1189,18 +1189,16 @@ function startAuto(){autoTimer=setInterval(()=>{const cur=parseInt(document.quer
 tabs.forEach(t=>t.addEventListener('click',()=>{clearInterval(autoTimer);setTab(parseInt(t.dataset.idx));startAuto();}));
 startAuto();
 
-// CMS cases
-(()=>{
-  const CASES_KEY='montas_cases';
+// CMS cases from API
+(async()=>{
   const grid=document.getElementById('cases-grid');
-  function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-  function getCases(){try{return JSON.parse(localStorage.getItem(CASES_KEY)||'[]');}catch{return[];}}
+  function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
   function caseCardHtml(c){
     const svcs=(c.services||[]).join(',');
     const ind=c.industry||'';
     const cover=c.cover&&c.cover.length>4?`<img src="${esc(c.cover)}" alt="${esc(c.title||'')}">`:'' ;
     const desc=c.subtitle||'';
-    return `<a href="cases/viewer.html?id=${esc(c.id)}" class="case-item" data-service="${esc(svcs)}" data-business="${esc(ind)}">
+    return `<a href="cases/viewer.html?slug=${esc(c.slug)}" class="case-item" data-service="${esc(svcs)}" data-business="${esc(ind)}">
       <div class="case-img">${cover}</div>
       <div class="case-meta">
         <div class="case-title">${esc(c.title||'')}</div>
@@ -1208,8 +1206,10 @@ startAuto();
       </div>
     </a>`;
   }
-  const published=getCases().filter(c=>c.status==='published');
-  if(published.length) grid.innerHTML=published.map(caseCardHtml).join('');
+  try{
+    const cases=await fetch('/api/cases').then(r=>r.json());
+    if(Array.isArray(cases)&&cases.length) grid.innerHTML=cases.map(caseCardHtml).join('');
+  }catch(e){}
 })();
 
 // Cases filter

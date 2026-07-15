@@ -137,8 +137,7 @@ img{display:block;max-width:100%}
 </footer>
 
 <script>
-const CASES_KEY='montas_cases';
-function getCases(){try{return JSON.parse(localStorage.getItem(CASES_KEY)||'[]');}catch{return[];}}
+async function getCases(){try{return await fetch('/api/cases').then(r=>r.json());}catch{return [];}}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 let activeFilter='all';
@@ -149,7 +148,7 @@ function caseCardHtml(c){
     :`<div class="case-card-img-ph"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9l4-4 4 4 4-6 6 6"/></svg></div>`;
   const tags=(c.services||[]).slice(0,3).map(t=>`<span class="case-card-tag">${esc(t)}</span>`).join('');
   const metrics=(c.metrics||[]).slice(0,3).map(m=>`<div class="case-metric-item"><div class="case-metric-val">${esc(m.value)}</div><div class="case-metric-lbl">${esc(m.label)}</div></div>`).join('');
-  return `<a href="viewer.html?id=${esc(c.id)}" class="case-card" data-industry="${esc(c.industry||'')}">
+  return `<a href="viewer.html?slug=${esc(c.slug)}" class="case-card" data-industry="${esc(c.industry||'')}">
     <div class="case-card-img">${cover}</div>
     <div class="case-card-body">
       ${c.industry?`<div class="case-card-ind">${esc(c.industry)}</div>`:''}
@@ -195,8 +194,8 @@ function buildFilters(cases){
   toolbar.querySelector('[data-filter="all"]').addEventListener('click',()=>applyFilter('all'));
 }
 
-function init(){
-  const cases=getCases().filter(c=>c.status==='published');
+async function init(){
+  const cases=await getCases();
   const grid=document.getElementById('cases-grid');
   if(!cases.length){
     grid.innerHTML='';
