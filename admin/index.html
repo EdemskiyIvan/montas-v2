@@ -975,7 +975,7 @@ function newArticle(){
 }
 
 function editArticle(id){
-  const a=articles.find(x=>x.id===id);
+  const a=articles.find(x=>String(x.id)===String(id));
   if(!a)return;
   editingId=id;
   currentTags=[...(a.tags||[])];
@@ -1175,7 +1175,7 @@ async function doDelete(){
   if(!deleteTargetId)return;
   try {
     await apiFetch('/api/posts/'+deleteTargetId, {method:'DELETE'});
-    articles=articles.filter(a=>a.id!==deleteTargetId);
+    articles=articles.filter(a=>String(a.id)!==String(deleteTargetId));
     updateSbCount();renderStats();renderList();
     closeModal();
     if(deleteTargetId===editingId){editingId=null;showView('articles');}
@@ -1755,7 +1755,7 @@ function newCase(){
 }
 
 function editCase(id){
-  const c=cases.find(x=>x.id===id);
+  const c=cases.find(x=>String(x.id)===String(id));
   if(!c)return;
   editingCaseId=id;
   currentCaseServices=[...(c.services||[])];
@@ -1815,7 +1815,7 @@ async function saveCase(){
     let saved;
     if(editingCaseId){
       saved = await apiFetch('/api/cases/'+editingCaseId, {method:'PUT', body: c});
-      const idx=cases.findIndex(x=>x.id===editingCaseId);
+      const idx=cases.findIndex(x=>String(x.id)===String(editingCaseId));
       if(idx>=0) cases[idx]={...saved};
     } else {
       saved = await apiFetch('/api/cases', {method:'POST', body: c});
