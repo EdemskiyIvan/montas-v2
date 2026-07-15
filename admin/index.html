@@ -944,7 +944,7 @@ function renderList(){
       </div>
       <span class="badge ${a.status}">${a.status==='published'?'Опубликовано':'Черновик'}</span>
       <div class="row-actions" onclick="event.stopPropagation()">
-        <button class="row-btn" onclick="previewArticle('${a.id}')">Просмотр</button>
+        <button class="row-btn" onclick="previewArticle('${a.id}','${a.slug}')">Просмотр</button>
         <button class="row-btn del" onclick="confirmDelete('${a.id}')">Удалить</button>
       </div>
     </div>`;
@@ -1153,8 +1153,9 @@ function initCoverDrop(){
 }
 
 // ── PREVIEW ──
-function previewArticle(id){
-  window.open('../blog/viewer.html?id='+id,`_blank`);
+function previewArticle(id, slug){
+  const url = slug ? `/blog/${slug}` : `../blog/viewer.html?id=${id}`;
+  window.open(url, '_blank');
 }
 function previewCurrent(){
   if(editingId)previewArticle(editingId);
@@ -1573,7 +1574,7 @@ async function tgPost(endpoint,cfg,body){
 }
 
 async function publishToTelegram(article,cfg){
-  const articleUrl=`https://montas.io/blog/viewer.html?id=${article.id}`;
+  const articleUrl=`https://montas.ru/blog/${article.slug}`;
   const hasCover=article.cover&&article.cover.startsWith('http');
   const footer=`\n\n📎 <a href="${articleUrl}">Читайте до конца на сайте montas.io/blog</a>`;
 
@@ -1603,7 +1604,7 @@ async function publishToTelegram(article,cfg){
 }
 
 async function publishToDevTo(article){
-  const canonicalUrl=`https://montas.io/blog/viewer.html?id=${article.id}`;
+  const canonicalUrl=`https://montas.ru/blog/${article.slug}`;
   const tags=(article.category?[article.category.toLowerCase().replace(/\s+/g,'')]:[]).slice(0,4);
   const r=await fetch('/api/devto',{
     method:'POST',
@@ -1622,7 +1623,7 @@ async function publishToDevTo(article){
 }
 
 async function publishToMedium(article,cfg){
-  const url=`${location.origin}/blog/viewer.html?id=${article.id}`;
+  const url=`https://montas.ru/blog/${article.slug}`;
   const r=await fetch(cfg.webhook,{
     method:'POST',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
